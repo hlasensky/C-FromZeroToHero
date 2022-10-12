@@ -16,7 +16,7 @@ int clearBuffer(char array[101])
 
 char readFile(struct namePlusPhone arrayOfNamePlusPhone[42])
 {
-    char ch;
+    int ch;
     char bufferArray[101];
 
     int index = 0;
@@ -36,9 +36,9 @@ char readFile(struct namePlusPhone arrayOfNamePlusPhone[42])
             if (index % 2 == 0)
             {
                 strcpy(arrayOfNamePlusPhone[index / 2].name, bufferArray);
+                arrayOfNamePlusPhone[index / 2].index = (index / 2);
                 i = 0;
                 clearBuffer(bufferArray);
-                arrayOfNamePlusPhone[index / 2].index = (index / 2);
             }
             else
             {
@@ -69,7 +69,7 @@ int findByNumber(char *sequenceOfNumbers, char *phoneNumber)
         {
             return find;
         }
-        //printf("findNum seq: %c, phoneN: %c\n", sequenceOfNumbers[counterSeqOFNum], phoneNumber[counterPhoneNumber]);
+        // printf("findNum seq: %c, phoneN: %c\n", sequenceOfNumbers[counterSeqOFNum], phoneNumber[counterPhoneNumber]);
         if (sequenceOfNumbers[counterSeqOFNum] == phoneNumber[counterPhoneNumber])
         {
             find++;
@@ -85,9 +85,51 @@ int findByNumber(char *sequenceOfNumbers, char *phoneNumber)
     return -1;
 }
 
-int findByString()
+int findByString(char *sequenceOfNumbers, char *costumerName)
 {
-    return 0;
+    int find;
+    int counterCostumerName;
+    find = 0;
+    counterCostumerName = 0;
+    char arrayOfCharsReplInt[] = {
+        '+',
+        '0',
+        'abc',
+        'def',
+        'ghi',
+        'jkl',
+        'mno',
+        'pqrs',
+        'tuv',
+        'wxyz',
+    };
+
+    for (int counterSeqOFNum = 0; counterSeqOFNum < strlen(sequenceOfNumbers); counterSeqOFNum++)
+    {
+        int indexInArrayOfCharsReplInt = sequenceOfNumbers[counterSeqOFNum];
+
+        for (int counterCharsReplInt = 0; counterCharsReplInt < strlen(arrayOfCharsReplInt[indexInArrayOfCharsReplInt]); counterCharsReplInt++)
+        {
+            if (arrayOfCharsReplInt[indexInArrayOfCharsReplInt] == costumerName[])
+        }
+        if (counterCostumerName == strlen(sequenceOfNumbers))
+        {
+            return find;
+        }
+        // printf("findNum seq: %c, phoneN: %c\n", sequenceOfNumbers[counterSeqOFNum], phoneNumber[counterPhoneNumber]);
+        if (sequenceOfNumbers[counterSeqOFNum] == costumerName[counterCostumerName])
+        {
+            find++;
+            counterSeqOFNum++;
+        }
+        else
+        {
+            find = 0;
+            counterSeqOFNum = 0;
+        }
+    }
+
+    return -1;
 }
 
 char *find(char *sequenceOfNumbers, struct namePlusPhone namePhoneArray[42], int numberOfContacts, char arrayOfIndexes[42])
@@ -98,9 +140,9 @@ char *find(char *sequenceOfNumbers, struct namePlusPhone namePhoneArray[42], int
     int numberOfFindsInStr;
     for (int i = 0; i < numberOfContacts; ++i)
     {
-        printf("find num: %s\n", namePhoneArray[i].phone);
+        // printf("find num: %s\n", namePhoneArray[i].phone);
         numberOfFindsInNum = findByNumber(sequenceOfNumbers, namePhoneArray[i].phone);
-        numberOfFindsInStr = findByString(sequenceOfNumbers, namePhoneArray[i].phone);
+        numberOfFindsInStr = findByString(sequenceOfNumbers, namePhoneArray[i].name);
         if (numberOfFindsInNum == strlen(sequenceOfNumbers) || numberOfFindsInStr == strlen(sequenceOfNumbers))
         {
             printf("find index: %d\n", namePhoneArray[i].index);
@@ -121,7 +163,7 @@ int main(int argc, char *argv[])
     struct namePlusPhone namePhoneArray[42];
     numberOfContacts = readFile(namePhoneArray);
     arrayOfIndexes = find(phoneNumber, namePhoneArray, numberOfContacts, arrayForIndexes);
-    for (int i = 0; i < strlen(arrayOfIndexes) - 1; ++i)
+    for (int i = 0; i < (5); ++i)
     {
         // printf("%s\n", namePhoneArray[i].name);
         // printf("%s\n", namePhoneArray[i].phone);
