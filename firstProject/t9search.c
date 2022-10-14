@@ -91,10 +91,9 @@ int findByNumber(char *sequenceOfNumbers, char *phoneNumber)
 
 int findByString(char *sequenceOfNumbers, char *costumerName)
 {
-    int find;
-    int counterCostumerName;
-    find = 0;
-    counterCostumerName = 0;
+    int find = 0;
+    int counterCostumerName = 0;
+    int counterSeqOFNum = 0;
     char *arrayOfCharsReplInt[] = {
         "+",
         "abc",
@@ -106,15 +105,15 @@ int findByString(char *sequenceOfNumbers, char *costumerName)
         "tuv",
         "wxyz"};
 
-    int counterSeqOFNum = 0;
     int indexInArrayOfCharsReplInt;
     char *stringFromArrayOfCharsReplInt;
 
     for (counterCostumerName = 0; counterCostumerName < strlen(costumerName); counterCostumerName++) // looping through name
     {
+        // making number from string
         if (sequenceOfNumbers[counterSeqOFNum] == 48)
         {
-            indexInArrayOfCharsReplInt = 0; // index
+            indexInArrayOfCharsReplInt = 0; // index if it's zero
         }
         else
         {
@@ -123,20 +122,30 @@ int findByString(char *sequenceOfNumbers, char *costumerName)
         stringFromArrayOfCharsReplInt = arrayOfCharsReplInt[indexInArrayOfCharsReplInt]; // string on index saved in indexInArrayOfCharsReplInt
         // printf("str in arrayOfCharsReplInt: %d\n", indexInArrayOfCharsReplInt);
 
+        if (find == strlen(sequenceOfNumbers))
+        {
+            return find;
+        }
         for (int counterCharsReplInt = 0; counterCharsReplInt < strlen(stringFromArrayOfCharsReplInt); counterCharsReplInt++) // looping through string in arrayOfCharsReplInt
         {
 
             if (stringFromArrayOfCharsReplInt[counterCharsReplInt] == costumerName[counterCostumerName])
             {
-                // printf("str in arrayOfCharsReplInt: %c == %c\n", stringFromArrayOfCharsReplInt[counterCharsReplInt], costumerName[counterCostumerName]);
+                printf("str in arrayOfCharsReplInt %c ==  costumerName %c\n", stringFromArrayOfCharsReplInt[counterCharsReplInt], costumerName[counterCostumerName]);
+                printf("costumerName %s\n", costumerName);
                 find++;
+                counterSeqOFNum++;
                 break;
             }
-            counterSeqOFNum++;
-        }
-        if (find == strlen(sequenceOfNumbers))
-        {
-            return find;
+            else
+            {
+
+                if (find > 0 && counterCharsReplInt == (strlen(stringFromArrayOfCharsReplInt) - 1))
+                {
+                    find = 0;
+                    counterSeqOFNum = 0;
+                }
+            }
         }
     }
 
@@ -152,11 +161,11 @@ char *find(char *sequenceOfNumbers, struct namePlusPhone namePhoneArray[42], int
     for (int i = 0; i < numberOfContacts; ++i)
     {
         // printf("find num: %s\n", namePhoneArray[i].phone);
-        numberOfFindsInNum = findByNumber(sequenceOfNumbers, namePhoneArray[i].phone);
+        // numberOfFindsInNum = findByNumber(sequenceOfNumbers, namePhoneArray[i].phone);
         numberOfFindsInStr = findByString(sequenceOfNumbers, namePhoneArray[i].name);
         if (numberOfFindsInNum == strlen(sequenceOfNumbers) || numberOfFindsInStr == strlen(sequenceOfNumbers))
         {
-            //printf("find index: %d\n", namePhoneArray[i].index);
+            printf("find index: %d\n", namePhoneArray[i].index);
             arrayOfIndexes[counter] = namePhoneArray[i].index;
             counter++;
         }
@@ -178,14 +187,14 @@ int main(int argc, char *argv[])
     numberOfContacts = readFile(namePhoneArray);
     arrayOfIndexes = find(phoneNumberSequence, namePhoneArray, numberOfContacts, arrayForIndexes, indexCounter);
 
-    for (int y = 0; y < *indexCounter; ++y)
+    for (int y = 0; y < numberOfContacts; ++y)
     {
-        for (int i = 0; i < numberOfContacts; ++i)
+        for (int i = 0; i < *indexCounter; ++i)
         {
-            //{printf("%d == %d\n", namePhoneArray[y].index, arrayOfIndexes[i]);
+            // printf("%d\n", *indexCounter);
+            // printf("%d == %d\n", namePhoneArray[y].index, arrayOfIndexes[i]);
             if (arrayOfIndexes[i] == namePhoneArray[y].index)
             {
-                printf("%d\n", *indexCounter);
                 printf("Name: %s\n", namePhoneArray[y].name);
                 printf("Phone: %s\n", namePhoneArray[y].phone);
                 printf("Index: %d\n", namePhoneArray[y].index);
