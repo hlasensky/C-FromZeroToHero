@@ -84,7 +84,7 @@ int findByNumber(char *sequenceOfNumbers, char *phoneNumber) // function that ta
             return 0;
         }
     }
-    return -1;
+    return 1;
 }
 
 int findByString(char *sequenceOfNumbers, char *costumerName) // function that takes sequence of numbers that we gave it when we enter a command plus costumerName and find if translated sequence of numbers to letters is in name
@@ -147,12 +147,11 @@ int findByString(char *sequenceOfNumbers, char *costumerName) // function that t
         }
     }
 
-    return -1;
+    return 1;
 }
 
 char *find(char *sequenceOfNumbers, struct namePlusPhone namePhoneArray[100], int numberOfContacts, char arrayForIndexes[200], int *indexCounter) // function that goes through all the contacts and passes them to the findByNumber and findByString functions and tracks when the functions find match
 {
-
     int counter = 0;
     int numberOfFindsInNum;
     int numberOfFindsInStr;
