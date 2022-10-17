@@ -74,6 +74,10 @@ char readFile(struct namePlusPhone arrayOfNamePlusPhone[100]) // function for re
         }
         else
         {
+            if (charCounter > 100) {
+                printf("The name or phone number is too long!");
+                return -1;
+            }
             if (ch >= 'A' && ch <= 'Z') // setting uppercase letters to lowercase
             {
                 ch += 32;
