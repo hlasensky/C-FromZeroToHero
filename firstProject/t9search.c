@@ -8,19 +8,36 @@ struct namePlusPhone // structure for contact
     int index;
 };
 
+// help functions
 int clearBuffer(char array[101]) // function for clearing buffer array in function readFile
 {
     for (size_t i = 0; i <= 101; ++i) // for loop that erase data in every cell of array
         array[i] = 0;
 }
 
+int controlOfInput(char *sequenceOfChars, char *errorMessage) // function that check if the input is a number
+{
+    for (int index = 0; index < strlen(sequenceOfChars); index++)
+    {
+        // printf("%c\n", sequenceOfChars[index]);
+        if (sequenceOfChars[index] < 48 || sequenceOfChars[index] > 57)
+        {
+            printf("%s\n", errorMessage);
+            return 1;
+        }
+    }
+    return 0;
+}
+//-------------------------------------
+
 char readFile(struct namePlusPhone arrayOfNamePlusPhone[100]) // function for reading every character from file with getChar function
 {
     int index = 0;
     int charCounter = 0;
+    int error = 0;
     int ch;
     char bufferArray[101];
-
+    char errorMessage[] = "Phone numbers must be in every other row!";
     while (1)
     {
         ch = getchar();
@@ -41,6 +58,14 @@ char readFile(struct namePlusPhone arrayOfNamePlusPhone[100]) // function for re
             }
             else
             {
+                char str[101];
+                strcpy(str, bufferArray);
+                error = controlOfInput(str, errorMessage);
+
+                if (error) // checking if function controlOfInput returns an error
+                {
+                    return -1;
+                }
                 strcpy(arrayOfNamePlusPhone[(index - 1) / 2].phone, bufferArray);
                 charCounter = 0;
                 clearBuffer(bufferArray); // clearing buffer for new data
@@ -57,7 +82,12 @@ char readFile(struct namePlusPhone arrayOfNamePlusPhone[100]) // function for re
             charCounter++;
         }
     }
-    return index / 2; // returning number of contacts
+    if (index % 2 == 0)
+    {
+        return index / 2; // returning number of contacts
+    }
+    printf("Enter Names and Phone numbers!\n");
+    return -1;
 }
 
 int findByNumber(char *sequenceOfNumbers, char *phoneNumber) // function that takes sequence of numbers that we gave it when we enter a command plus phone number from arrayOfNamePlusPhone
@@ -105,7 +135,6 @@ int findByString(char *sequenceOfNumbers, char *costumerName) // function that t
         "pqrs",
         "tuv",
         "wxyz"}; // array representing numbers in sequence of numbers (number in sequenceOfNumbers - 1 = index in array)
-
 
     for (counterCostumerName = 0; counterCostumerName < strlen(costumerName); counterCostumerName++) // looping through costumer name
     {
@@ -172,50 +201,37 @@ char *find(char *sequenceOfNumbers, struct namePlusPhone namePhoneArray[100], in
     return arrayForIndexes;
 }
 
-int controlOfInput(char *phoneNumberSequence) // function that check if the input is a number
-{
-    for (int index = 0; index < strlen(phoneNumberSequence); index++)
-    {
-        if (phoneNumberSequence[index] < 48 || phoneNumberSequence[index] > 57)
-        {
-            printf("As an argument please enter number or numbers for example 11 or 602!");
-            return 1;
-        }
-    }
-    return 0;
-}
-
 int main(int argc, char *argv[])
 {
     char c;
     int numberOfContacts;
     int arrayOfIndexesCounter;
-    int *indexCounter;
+    int indexCounter;
     char *phoneNumberSequence = argv[1];
     char *arrayOfIndexes;
     char arrayForIndexes[200];
+    char errorMessage[] = "As an argument please enter number or numbers for example 11 or 602!";
     struct namePlusPhone namePhoneArray[100]; // making array of structures
     int error = 0;
-    *indexCounter = 0;
+    indexCounter = 0;
 
     numberOfContacts = readFile(namePhoneArray);
 
     if (argc > 1) // check if the program gets an argument
     {
-        error = controlOfInput(phoneNumberSequence);
+        error = controlOfInput(phoneNumberSequence, errorMessage);
 
-        if (error) // checking if function controlOfInput returns an error
+        if (error || numberOfContacts == -1) // checking if function controlOfInput returns an error
         {
             return 1;
         }
+        arrayOfIndexes = find(phoneNumberSequence, namePhoneArray, numberOfContacts, arrayForIndexes, &indexCounter);
 
-        arrayOfIndexes = find(phoneNumberSequence, namePhoneArray, numberOfContacts, arrayForIndexes, indexCounter);
-
-        if (*indexCounter != 0) // checking if there is a found contact
+        if (indexCounter != 0) // checking if there is a found contact
         {
             for (int y = 0; y < numberOfContacts; ++y) // printing a result
             {
-                for (int i = 0; i < *indexCounter; ++i)
+                for (int i = 0; i < indexCounter; ++i)
                 {
                     // printf("%d\n", *indexCounter);
                     // printf("%d == %d\n", namePhoneArray[y].index, arrayOfIndexes[i]);
