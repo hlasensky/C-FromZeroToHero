@@ -8,7 +8,7 @@ struct namePlusPhone // structure for contact
     int index;
 };
 
-// help functions
+// helper functions
 int clearBuffer(char array[101]) // function for clearing buffer array in function readFile
 {
     for (size_t i = 0; i <= 101; ++i) // for loop that erase data in every cell of array
@@ -28,7 +28,7 @@ int controlOfInput(char *sequenceOfChars, char *errorMessage) // function that c
     }
     return 0;
 }
-//-------------------------------------
+//-------------------------------------//
 
 char readFile(struct namePlusPhone arrayOfNamePlusPhone[100]) // function for reading every character from file with getChar function
 {
@@ -136,7 +136,7 @@ int findByString(char *sequenceOfNumbers, char *costumerName) // function that t
         "tuv",
         "wxyz"}; // array representing numbers in sequence of numbers (number in sequenceOfNumbers - 1 = index in array)
 
-    for (counterCostumerName = 0; counterCostumerName < strlen(costumerName); counterCostumerName++) // looping through costumer name
+    for (counterCostumerName = 0; counterCostumerName <= strlen(costumerName); counterCostumerName++) // looping through costumer name
     {
         // making from sequence of numbers(type char) numbers(type int)
         if (sequenceOfNumbers[counterSeqOFNum] == 48) // checking if number is zero
@@ -159,8 +159,8 @@ int findByString(char *sequenceOfNumbers, char *costumerName) // function that t
         {
             if (stringFromArrayOfCharsReplInt[counterCharsReplInt] == costumerName[counterCostumerName]) // checking if character is in costumer name
             {
-                // printf("str in arrayOfCharsReplInt %c ==  costumerName %c\n", stringFromArrayOfCharsReplInt[counterCharsReplInt], costumerName[counterCostumerName]);
-                // printf("costumerName %s\n", costumerName);
+                //printf("str in arrayOfCharsReplInt %c ==  costumerName %c\n", stringFromArrayOfCharsReplInt[counterCharsReplInt], costumerName[counterCostumerName]);
+                //printf("costumerName %s\n", costumerName);
                 find++;
                 counterSeqOFNum++;
                 break;
@@ -179,7 +179,7 @@ int findByString(char *sequenceOfNumbers, char *costumerName) // function that t
     return 1;
 }
 
-char *find(char *sequenceOfNumbers, struct namePlusPhone namePhoneArray[100], int numberOfContacts, char arrayForIndexes[200], int *indexCounter) // function that goes through all the contacts and passes them to the findByNumber and findByString functions and tracks when the functions find match
+char *find(char *sequenceOfNumbers, struct namePlusPhone namePhoneArray[200], int numberOfContacts, char arrayForIndexes[200], int *indexCounter) // function that goes through all the contacts and passes them to the findByNumber and findByString functions and tracks when the functions find match
 {
     int counter = 0;
     int numberOfFindsInNum;
@@ -211,7 +211,7 @@ int main(int argc, char *argv[])
     char *arrayOfIndexes;
     char arrayForIndexes[200];
     char errorMessage[] = "As an argument please enter number or numbers for example 11 or 602!";
-    struct namePlusPhone namePhoneArray[100]; // making array of structures
+    struct namePlusPhone namePhoneArray[200]; // making array of structures
     int error = 0;
     indexCounter = 0;
 
