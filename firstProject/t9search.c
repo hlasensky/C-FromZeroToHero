@@ -32,7 +32,7 @@ int controlOfInput(char *sequenceOfChars, char *errorMessage) // function that c
     }
     return 0;
 }
-//-------------------------------------
+//-------------------------------------//
 
 char readFile(struct namePlusPhone arrayOfNamePlusPhone[100]) // function for reading every character from file with getChar function
 {
@@ -78,6 +78,10 @@ char readFile(struct namePlusPhone arrayOfNamePlusPhone[100]) // function for re
         }
         else
         {
+            if (charCounter > 100) {
+                printf("The name or phone number is too long!");
+                return -1;
+            }
             if (ch >= 'A' && ch <= 'Z') // setting uppercase letters to lowercase
             {
                 ch += 32;
@@ -164,7 +168,7 @@ int findByString(char *sequenceOfNumbers, char *costumerName) // function that t
             if (stringFromArrayOfCharsReplInt[counterCharsReplInt] == costumerName[counterCostumerName]) // checking if character is in costumer name
             {
                 //printf("str in arrayOfCharsReplInt %c ==  costumerName %c\n", stringFromArrayOfCharsReplInt[counterCharsReplInt], costumerName[counterCostumerName]);
-                // printf("costumerName %s\n", costumerName);
+                //printf("costumerName %s\n", costumerName);
                 find++;
                 counterSeqOFNum++;
                 break;
@@ -183,7 +187,7 @@ int findByString(char *sequenceOfNumbers, char *costumerName) // function that t
     return 1;
 }
 
-char *find(char *sequenceOfNumbers, struct namePlusPhone namePhoneArray[100], int numberOfContacts, char arrayForIndexes[200], int *indexCounter) // function that goes through all the contacts and passes them to the findByNumber and findByString functions and tracks when the functions find match
+char *find(char *sequenceOfNumbers, struct namePlusPhone namePhoneArray[200], int numberOfContacts, char arrayForIndexes[200], int *indexCounter) // function that goes through all the contacts and passes them to the findByNumber and findByString functions and tracks when the functions find match
 {
     int counter = 0;
     int numberOfFindsInNum;
@@ -215,7 +219,8 @@ int main(int argc, char *argv[])
     char *arrayOfIndexes;
     char arrayForIndexes[200];
     char errorMessage[] = "As an argument please enter number or numbers for example 11 or 602!";
-    struct namePlusPhone namePhoneArray[100]; // making array of structures
+    struct namePlusPhone namePhoneArray[200]; // making array of structures
+    int error = 0;
     indexCounter = 0;
 
     numberOfContacts = readFile(namePhoneArray);
