@@ -2,20 +2,20 @@
 #include <string.h>
 
 int error = 0;
-const int arraySizeContacts = 100;
-const int rowSize = 101;
+#define ARRAY_SIZE_CONTACTS 200
+#define ROW_SIZE 101
 
 struct namePlusPhone // structure for contact
 {
-    char name[rowSize];
-    char phone[rowSize];
+    char name[ROW_SIZE];
+    char phone[ROW_SIZE];
     int index;
 };
 
 // help functions
-int clearBuffer(char array[rowSize]) // function for clearing buffer array in function readFile
+int clearBuffer(char array[ROW_SIZE]) // function for clearing buffer array in function readFile
 {
-    for (size_t i = 0; i <= rowSize; ++i) // for loop that erase data in every cell of array
+    for (size_t i = 0; i <= ROW_SIZE; ++i) // for loop that erase data in every cell of array
         array[i] = 0;
 }
 
@@ -34,13 +34,12 @@ int controlOfInput(char *sequenceOfChars, char *errorMessage) // function that c
 }
 //-------------------------------------//
 
-char readFile(struct namePlusPhone arrayOfNamePlusPhone[100]) // function for reading every character from file with getChar function
+char readFile(struct namePlusPhone arrayOfNamePlusPhone[ARRAY_SIZE_CONTACTS]) // function for reading every character from file with getChar function
 {
     int index = 0;
     int charCounter = 0;
-    int error = 0;
     int ch;
-    char bufferArray[rowSize];
+    char bufferArray[ROW_SIZE];
     char errorMessage[] = "Phone numbers must be in every other row!";
     while (1)
     {
@@ -62,7 +61,7 @@ char readFile(struct namePlusPhone arrayOfNamePlusPhone[100]) // function for re
             }
             else
             {
-                char str[rowSize];
+                char str[ROW_SIZE];
                 strcpy(str, bufferArray);
                 error = controlOfInput(str, errorMessage);
 
@@ -78,7 +77,7 @@ char readFile(struct namePlusPhone arrayOfNamePlusPhone[100]) // function for re
         }
         else
         {
-            if (charCounter > 100) {
+            if (charCounter > ROW_SIZE) {
                 printf("The name or phone number is too long!");
                 return -1;
             }
@@ -187,7 +186,7 @@ int findByString(char *sequenceOfNumbers, char *costumerName) // function that t
     return 1;
 }
 
-char *find(char *sequenceOfNumbers, struct namePlusPhone namePhoneArray[200], int numberOfContacts, char arrayForIndexes[200], int *indexCounter) // function that goes through all the contacts and passes them to the findByNumber and findByString functions and tracks when the functions find match
+char *find(char *sequenceOfNumbers, struct namePlusPhone namePhoneArray[ARRAY_SIZE_CONTACTS], int numberOfContacts, char arrayForIndexes[ARRAY_SIZE_CONTACTS], int *indexCounter) // function that goes through all the contacts and passes them to the findByNumber and findByString functions and tracks when the functions find match
 {
     int counter = 0;
     int numberOfFindsInNum;
@@ -220,7 +219,6 @@ int main(int argc, char *argv[])
     char arrayForIndexes[200];
     char errorMessage[] = "As an argument please enter number or numbers for example 11 or 602!";
     struct namePlusPhone namePhoneArray[200]; // making array of structures
-    int error = 0;
     indexCounter = 0;
 
     numberOfContacts = readFile(namePhoneArray);
