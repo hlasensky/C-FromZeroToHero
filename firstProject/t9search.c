@@ -1,17 +1,21 @@
 #include <stdio.h>
 #include <string.h>
 
+int error = 0;
+const int arraySizeContacts = 100;
+const int rowSize = 101;
+
 struct namePlusPhone // structure for contact
 {
-    char name[101];
-    char phone[101];
+    char name[rowSize];
+    char phone[rowSize];
     int index;
 };
 
 // help functions
-int clearBuffer(char array[101]) // function for clearing buffer array in function readFile
+int clearBuffer(char array[rowSize]) // function for clearing buffer array in function readFile
 {
-    for (size_t i = 0; i <= 101; ++i) // for loop that erase data in every cell of array
+    for (size_t i = 0; i <= rowSize; ++i) // for loop that erase data in every cell of array
         array[i] = 0;
 }
 
@@ -36,7 +40,7 @@ char readFile(struct namePlusPhone arrayOfNamePlusPhone[100]) // function for re
     int charCounter = 0;
     int error = 0;
     int ch;
-    char bufferArray[101];
+    char bufferArray[rowSize];
     char errorMessage[] = "Phone numbers must be in every other row!";
     while (1)
     {
@@ -58,7 +62,7 @@ char readFile(struct namePlusPhone arrayOfNamePlusPhone[100]) // function for re
             }
             else
             {
-                char str[101];
+                char str[rowSize];
                 strcpy(str, bufferArray);
                 error = controlOfInput(str, errorMessage);
 
@@ -136,7 +140,7 @@ int findByString(char *sequenceOfNumbers, char *costumerName) // function that t
         "tuv",
         "wxyz"}; // array representing numbers in sequence of numbers (number in sequenceOfNumbers - 1 = index in array)
 
-    for (counterCostumerName = 0; counterCostumerName < strlen(costumerName); counterCostumerName++) // looping through costumer name
+    for (counterCostumerName = 0; counterCostumerName <= strlen(costumerName); counterCostumerName++) // looping through costumer name
     {
         // making from sequence of numbers(type char) numbers(type int)
         if (sequenceOfNumbers[counterSeqOFNum] == 48) // checking if number is zero
@@ -159,7 +163,7 @@ int findByString(char *sequenceOfNumbers, char *costumerName) // function that t
         {
             if (stringFromArrayOfCharsReplInt[counterCharsReplInt] == costumerName[counterCostumerName]) // checking if character is in costumer name
             {
-                // printf("str in arrayOfCharsReplInt %c ==  costumerName %c\n", stringFromArrayOfCharsReplInt[counterCharsReplInt], costumerName[counterCostumerName]);
+                //printf("str in arrayOfCharsReplInt %c ==  costumerName %c\n", stringFromArrayOfCharsReplInt[counterCharsReplInt], costumerName[counterCostumerName]);
                 // printf("costumerName %s\n", costumerName);
                 find++;
                 counterSeqOFNum++;
@@ -191,7 +195,7 @@ char *find(char *sequenceOfNumbers, struct namePlusPhone namePhoneArray[100], in
         numberOfFindsInStr = findByString(sequenceOfNumbers, namePhoneArray[i].name);
         if (!numberOfFindsInNum || !numberOfFindsInStr) // checking if aether of the functions found a match
         {
-            // printf("find index: %d\n", namePhoneArray[i].index);
+            // printf("found index: %d\n", namePhoneArray[i].index);
             arrayForIndexes[counter] = namePhoneArray[i].index; // saving index of found contact to an array
             counter++;
         }
@@ -212,7 +216,6 @@ int main(int argc, char *argv[])
     char arrayForIndexes[200];
     char errorMessage[] = "As an argument please enter number or numbers for example 11 or 602!";
     struct namePlusPhone namePhoneArray[100]; // making array of structures
-    int error = 0;
     indexCounter = 0;
 
     numberOfContacts = readFile(namePhoneArray);
