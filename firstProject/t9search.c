@@ -216,9 +216,9 @@ int main(int argc, char *argv[])
     int indexCounter;
     char *phoneNumberSequence = argv[1];
     char *arrayOfIndexes;
-    char arrayForIndexes[200];
+    char arrayForIndexes[ARRAY_SIZE_CONTACTS];
     char errorMessage[] = "As an argument please enter number or numbers for example 11 or 602!";
-    struct namePlusPhone namePhoneArray[200]; // making array of structures
+    struct namePlusPhone namePhoneArray[ARRAY_SIZE_CONTACTS]; // making array of structures
     indexCounter = 0;
 
     numberOfContacts = readFile(namePhoneArray);
