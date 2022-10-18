@@ -77,7 +77,8 @@ char readFile(struct namePlusPhone arrayOfNamePlusPhone[ARRAY_SIZE_CONTACTS]) //
         }
         else
         {
-            if (charCounter > ROW_SIZE) {
+            if (charCounter > (ROW_SIZE - 1))
+            {
                 printf("The name or phone number is too long!");
                 return -1;
             }
@@ -166,8 +167,8 @@ int findByString(char *sequenceOfNumbers, char *costumerName) // function that t
         {
             if (stringFromArrayOfCharsReplInt[counterCharsReplInt] == costumerName[counterCostumerName]) // checking if character is in costumer name
             {
-                //printf("str in arrayOfCharsReplInt %c ==  costumerName %c\n", stringFromArrayOfCharsReplInt[counterCharsReplInt], costumerName[counterCostumerName]);
-                //printf("costumerName %s\n", costumerName);
+                // printf("str in arrayOfCharsReplInt %c ==  costumerName %c\n", stringFromArrayOfCharsReplInt[counterCharsReplInt], costumerName[counterCostumerName]);
+                // printf("costumerName %s\n", costumerName);
                 find++;
                 counterSeqOFNum++;
                 break;
@@ -214,8 +215,8 @@ int main(int argc, char *argv[])
     int numberOfContacts;
     int arrayOfIndexesCounter;
     int indexCounter;
-    char *phoneNumberSequence = argv[1];
     char *arrayOfIndexes;
+    char *phoneNumberSequence = argv[1];
     char arrayForIndexes[ARRAY_SIZE_CONTACTS];
     char errorMessage[] = "As an argument please enter number or numbers for example 11 or 602!";
     struct namePlusPhone namePhoneArray[ARRAY_SIZE_CONTACTS]; // making array of structures
