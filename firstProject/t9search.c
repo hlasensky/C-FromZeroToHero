@@ -77,7 +77,7 @@ char readFile(struct namePlusPhone arrayOfNamePlusPhone[ARRAY_SIZE_CONTACTS]) //
         }
         else
         {
-            if (charCounter > (ROW_SIZE - 1))
+            if (charCounter > (ROW_SIZE - 2))
             {
                 printf("The name or phone number is too long!");
                 return -1;
