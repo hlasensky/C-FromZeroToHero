@@ -7,7 +7,7 @@ Patricia
 Libor
 608527098
 James
-604487344
+604687344
 Bebe
 785650317
 Linda
@@ -30,12 +30,8 @@ Renata Kopecka
 774970641
 Ilona Maresova
 603108054
-Zaneta Svobodova
-726106419
-Kristina Jelinkova
-776118448
 Arnost Blazek
-605170378
+605170348
 Filip Kadlec
 739539180
 Daniel Kral
@@ -102,8 +98,6 @@ Karel Pospisil
 601917831
 Michaela Maskova
 730487346
-Blazena Gabriela Lukas Monika Eva Ladislava Dominika Jan Frantiska Vit Milan Ruzena Martina Polakova
-6066092276066092276066092276066092276066092276066092276066092276066092276066092276066092276066092276
 Jiri Blaha
 607821671
 Vasyl Urban
@@ -158,6 +152,10 @@ Alena Krizova ml.
 602347834
 Marcel Blazek
 723838296
+Zaneta Svobodova
+726106448
+Kristina Jelinkova
+776118448
 Veronika Bartosova
 604016360
 Jana Cerna

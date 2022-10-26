@@ -13,7 +13,7 @@ struct namePlusPhone // structure for contact
 };
 
 // help functions
-int clearBuffer(char array[ROW_SIZE]) // function for clearing buffer array in function readFile
+void clearBuffer(char array[ROW_SIZE]) // function for clearing buffer array in function readFile
 {
     for (size_t i = 0; i <= ROW_SIZE; ++i) // for loop that erase data in every cell of array
         array[i] = 0;
@@ -21,10 +21,11 @@ int clearBuffer(char array[ROW_SIZE]) // function for clearing buffer array in f
 
 int controlOfInput(char *sequenceOfChars, char *errorMessage) // function that check if the input is a number
 {
-    for (int index = 0; index < strlen(sequenceOfChars); index++)
+    int len = strlen(sequenceOfChars);
+    for (int index = 0; index < len; index++)
     {
         // printf("%c\n", sequenceOfChars[index]);
-        if (sequenceOfChars[index] < 48 || sequenceOfChars[index] > 57)
+        if (sequenceOfChars[index] < '0' || sequenceOfChars[index] > '9')
         {
             fprintf(stderr, "%s\n", errorMessage);
             return 1;
@@ -102,20 +103,26 @@ int findByNumber(char *sequenceOfNumbers, char *phoneNumber) // function that ta
 {
     int find = 0;
     int counterSeqOFNum = 0;
-    for (int counterPhoneNumber = 0; counterPhoneNumber < strlen(phoneNumber); counterPhoneNumber++) // looping through phone number
+    int lenPhoneNumber = strlen(phoneNumber);
+    int lenSequenceOfNumbers = strlen(sequenceOfNumbers);
+
+    for (int counterPhoneNumber = 0; counterPhoneNumber < lenPhoneNumber; counterPhoneNumber++) // looping through phone number
     {
         if (sequenceOfNumbers[counterSeqOFNum] == phoneNumber[counterPhoneNumber]) // checking if sequence number digit and phone number digit is same
         {
+            // printf("findNum seq: %c on index %d == phoneN: %c\n", sequenceOfNumbers[counterSeqOFNum], counterSeqOFNum, phoneNumber[counterPhoneNumber]);
             counterSeqOFNum++;
             find++;
-            // printf("findNum seq: %c, phoneN: %c\n", sequenceOfNumbers[counterSeqOFNum], phoneNumber[counterPhoneNumber]);
         }
         else // erasing progress if numbers dont match
         {
+            if (find != 0) {
+                counterPhoneNumber--;
+            }
             find = 0;
             counterSeqOFNum = 0;
         }
-        if (counterSeqOFNum == strlen(sequenceOfNumbers)) // checking if number of matching numbers is same length as sequence of numbers
+        if (counterSeqOFNum == lenSequenceOfNumbers) // checking if number of matching numbers is same length as sequence of numbers
         {
             return 0;
         }
@@ -141,27 +148,29 @@ int findByString(char *sequenceOfNumbers, char *costumerName) // function that t
         "pqrs",
         "tuv",
         "wxyz"}; // array representing numbers in sequence of numbers (number in sequenceOfNumbers - 1 = index in array)
-
-    for (counterCostumerName = 0; counterCostumerName <= strlen(costumerName); counterCostumerName++) // looping through costumer name
+    int lenCostumerName = strlen(costumerName);
+    for (counterCostumerName = 0; counterCostumerName <= lenCostumerName; counterCostumerName++) // looping through costumer name
     {
         // making from sequence of numbers(type char) numbers(type int)
-        if (sequenceOfNumbers[counterSeqOFNum] == 48) // checking if number is zero
+        if (sequenceOfNumbers[counterSeqOFNum] == '0') // checking if number is zero
         {
             indexInArrayOfCharsReplInt = 0;
         }
         else
         {
-            indexInArrayOfCharsReplInt = sequenceOfNumbers[counterSeqOFNum] - 48; // checking if number is different from zero
+            indexInArrayOfCharsReplInt = sequenceOfNumbers[counterSeqOFNum] - '0'; // checking if number is different from zero
         }
 
         stringFromArrayOfCharsReplInt = arrayOfCharsReplInt[indexInArrayOfCharsReplInt]; // string on index indexInArrayOfCharsReplInt saved in stringFromArrayOfCharsReplInt
         // printf("str in arrayOfCharsReplInt: %d\n", indexInArrayOfCharsReplInt);
 
-        if (find == strlen(sequenceOfNumbers))
+        int lenSequenceOfNumbers = strlen(sequenceOfNumbers);
+        if (find == lenSequenceOfNumbers)
         {
             return 0;
         }
-        for (int counterCharsReplInt = 0; counterCharsReplInt < strlen(stringFromArrayOfCharsReplInt); counterCharsReplInt++) // looping through string in arrayOfCharsReplInt
+        int lenStringFromArrayOfCharsReplInt = strlen(stringFromArrayOfCharsReplInt);
+        for (int counterCharsReplInt = 0; counterCharsReplInt < lenStringFromArrayOfCharsReplInt; counterCharsReplInt++) // looping through string in arrayOfCharsReplInt
         {
             if (stringFromArrayOfCharsReplInt[counterCharsReplInt] == costumerName[counterCostumerName]) // checking if character is in costumer name
             {
@@ -173,7 +182,8 @@ int findByString(char *sequenceOfNumbers, char *costumerName) // function that t
             }
             else
             {
-                if (find > 0 && counterCharsReplInt == (strlen(stringFromArrayOfCharsReplInt) - 1)) // checking if next character is match if not reset
+                lenStringFromArrayOfCharsReplInt = strlen(stringFromArrayOfCharsReplInt);
+                if (find > 0 && counterCharsReplInt == (lenStringFromArrayOfCharsReplInt - 1)) // checking if next character is match if not reset
                 {
                     find = 0;
                     counterSeqOFNum = 0;
@@ -209,9 +219,7 @@ char *find(char *sequenceOfNumbers, struct namePlusPhone namePhoneArray[ARRAY_SI
 
 int main(int argc, char *argv[])
 {
-    char c;
     int numberOfContacts;
-    int arrayOfIndexesCounter;
     int indexCounter;
     char *arrayOfIndexes;
     char *phoneNumberSequence = argv[1];
