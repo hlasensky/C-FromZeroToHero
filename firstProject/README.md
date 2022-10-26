@@ -16,7 +16,7 @@ Get-Content {contact file name} | .\t9search {sequence of numbers}
 
 ### For linux
 
-```git
+```bash
 ./t9search < {filename} {sequence of numbers}
 ```
 

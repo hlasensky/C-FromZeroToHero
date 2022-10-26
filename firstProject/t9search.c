@@ -26,7 +26,7 @@ int controlOfInput(char *sequenceOfChars, char *errorMessage) // function that c
         // printf("%c\n", sequenceOfChars[index]);
         if (sequenceOfChars[index] < 48 || sequenceOfChars[index] > 57)
         {
-            printf("%s\n", errorMessage);
+            fprintf(stderr, "%s\n", errorMessage);
             return 1;
         }
     }
@@ -79,7 +79,7 @@ char readFile(struct namePlusPhone arrayOfNamePlusPhone[ARRAY_SIZE_CONTACTS]) //
         {
             if (charCounter > (ROW_SIZE - 2))
             {
-                printf("The name or phone number is too long!");
+                fprintf(stderr, "The name or phone number is too long!");
                 return -1;
             }
             if (ch >= 'A' && ch <= 'Z') // setting uppercase letters to lowercase
@@ -94,7 +94,7 @@ char readFile(struct namePlusPhone arrayOfNamePlusPhone[ARRAY_SIZE_CONTACTS]) //
     {
         return index / 2; // returning number of contacts
     }
-    printf("Enter Names and Phone numbers!\n");
+    fprintf(stderr, "Enter Names and Phone numbers!\n");
     return -1;
 }
 
@@ -108,8 +108,6 @@ int findByNumber(char *sequenceOfNumbers, char *phoneNumber) // function that ta
         {
             counterSeqOFNum++;
             find++;
-            // printf("Find num %d\n", strlen(sequenceOfNumbers));
-            // printf("Found num %d\n", counterSeqOFNum);
             // printf("findNum seq: %c, phoneN: %c\n", sequenceOfNumbers[counterSeqOFNum], phoneNumber[counterPhoneNumber]);
         }
         else // erasing progress if numbers dont match
@@ -251,7 +249,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-            printf("Contact(s) not found");
+            printf("Not found");
         }
         return 0;
     }
