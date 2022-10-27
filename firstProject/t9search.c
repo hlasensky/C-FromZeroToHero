@@ -116,7 +116,8 @@ int findByNumber(char *sequenceOfNumbers, char *phoneNumber) // function that ta
         }
         else // erasing progress if numbers dont match
         {
-            if (find != 0) {
+            if (find != 0)
+            {
                 counterPhoneNumber--;
             }
             find = 0;
@@ -185,6 +186,10 @@ int findByString(char *sequenceOfNumbers, char *costumerName) // function that t
                 lenStringFromArrayOfCharsReplInt = strlen(stringFromArrayOfCharsReplInt);
                 if (find > 0 && counterCharsReplInt == (lenStringFromArrayOfCharsReplInt - 1)) // checking if next character is match if not reset
                 {
+                    if (find != 0)
+                    {
+                        counterCostumerName--;
+                    }
                     find = 0;
                     counterSeqOFNum = 0;
                 }
