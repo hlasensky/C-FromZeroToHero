@@ -117,7 +117,7 @@ int findByNumber(char *sequenceOfNumbers, char *phoneNumber) // function that ta
         else // erasing progress if numbers dont match
         {
             if (find != 0)
-            {
+            { //stepping back to check next number after a failed comparison
                 counterPhoneNumber--;
             }
             find = 0;
