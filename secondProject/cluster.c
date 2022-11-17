@@ -139,6 +139,15 @@ struct cluster_t *resize_cluster(struct cluster_t *c, int new_cap)
 void append_cluster(struct cluster_t *c, struct obj_t obj)
 {
     // TODO
+    if (c->capacity == c->size)
+    {
+        c = resize_cluster(c, c->capacity++);
+    }
+    c->obj[c->size]
+        .id = obj.id;
+    c->obj[c->size].x = obj.x;
+    c->obj[c->size].y = obj.y;
+    c->size++;
 }
 
 /*
@@ -261,12 +270,13 @@ int load_clusters(char *filename, struct cluster_t **arr)
     assert(arr != NULL);
     // TODO
     FILE *fp;
+    struct obj_t temporaryObj;
     char *line = NULL;
     char *parsed = NULL;
     char *countPointer = NULL;
+    int lineCounter = 0;
     size_t len = 0;
     size_t read;
-    int lineCounter = 0;
 
     fp = fopen(filename, "r");
     if (fp == NULL)
@@ -275,33 +285,28 @@ int load_clusters(char *filename, struct cluster_t **arr)
     while ((read = getline(&line, &len, fp)) != EOF)
     {
         int parsedItemCount = 0;
+
         parsed = strtok(line, " ");
 
-        /* walk through other tokens */
         while (parsed != NULL)
         {
             if (lineCounter > 0)
             {
-                if (parsedItemCount % 3 == 0)
-                {
-                    init_cluster(&((*arr)[lineCounter - 1]), 1);
-                    (*arr)[lineCounter - 1].size = 1;
-                }
-
                 switch (parsedItemCount)
                 {
                 case 0:
-                    (*arr)[lineCounter - 1].obj[0].id = atoi(parsed);
+                    temporaryObj.id = atoi(parsed);
                     // printf("%d\n", (*arr)[lineCounter - 1].obj[0].id);
                     break;
                 case 1:
-                    (*arr)[lineCounter - 1].obj[0].x = atof(parsed);
+                    temporaryObj.x = atof(parsed);
                     // printf("%f\n", (*arr)[lineCounter - 1].obj[0].x);
                     break;
                 case 2:
-                    (*arr)[lineCounter - 1].obj[0].y = atof(parsed);
+                    temporaryObj.y = atof(parsed);
                     // printf("%f\n", (*arr)[lineCounter - 1].obj[0].y);
-
+                    init_cluster(&(*arr)[lineCounter - 1], 0);
+                    append_cluster(&(*arr)[lineCounter - 1], temporaryObj);
                     break;
                 }
             }
@@ -320,16 +325,17 @@ int load_clusters(char *filename, struct cluster_t **arr)
                     i++;
                 }
             }
-            parsedItemCount++;
+
             parsed = strtok(NULL, " ");
+            parsedItemCount++;
         }
         lineCounter++;
     }
     fclose(fp);
     if (line)
         free(line);
-    lineCounter--;
-    return lineCounter;
+    
+    return --lineCounter;
 }
 
 /*
@@ -355,10 +361,8 @@ int main(int argc, char *argv[])
     print_clusters(clusters, numberOfClusters);
     // TODO
 
-
     for (int i = 0; i < numberOfClusters; i++)
     {
         clear_cluster(&clusters[i]);
     }
-
 }
