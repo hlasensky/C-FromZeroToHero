@@ -87,8 +87,9 @@ void init_cluster(struct cluster_t *c, int cap)
 {
     assert(c != NULL);
     assert(cap >= 0);
-
     // TODO
+    c->capacity = cap;
+    c->size = 0;
     c->obj = malloc(cap * sizeof(struct obj_t));
 }
 
@@ -262,6 +263,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
     FILE *fp;
     char *line = NULL;
     char *parsed = NULL;
+    char *countPointer = NULL;
     size_t len = 0;
     size_t read;
     int lineCounter = 0;
@@ -270,7 +272,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
     if (fp == NULL)
         exit(EXIT_FAILURE);
 
-    while ((read = getline(&line, &len, fp)) != -1)
+    while ((read = getline(&line, &len, fp)) != EOF)
     {
         int parsedItemCount = 0;
         parsed = strtok(line, " ");
@@ -280,19 +282,39 @@ int load_clusters(char *filename, struct cluster_t **arr)
         {
             if (lineCounter > 0)
             {
+                init_cluster(&arr[lineCounter - 1], 1);
                 switch (parsedItemCount)
                 {
                 case 0:
-                    arr[lineCounter]->obj->id = parsed;
+                    (arr[0]->obj[0]).id = atoi(parsed);
+                    printf("hi%d", (arr[0]->obj[0].id));
                     break;
                 case 1:
-                    strtof(parsed, &arr[lineCounter]->obj->x);
+                    arr[lineCounter - 1]->obj->x = strtof(parsed, NULL);
+                    printf("hi%f\n", arr[lineCounter - 1]->obj->x);
                     break;
                 case 2:
-                    strtof(parsed, &arr[lineCounter]->obj->y);
+                    arr[lineCounter - 1]->obj->y = strtof(parsed, NULL);
                     break;
                 }
             }
+            else
+            {
+                countPointer = strtok(parsed, "=");
+                int i = 0;
+                while (countPointer != NULL)
+                {
+                    if (i > 0)
+                    {
+                        int count = countPointer;
+                        printf("%s\n", count);
+                        arr = malloc(count * sizeof(struct cluster_t));
+                    }
+                    countPointer = strtok(NULL, "=");
+                    i++;
+                }
+            }
+            parsedItemCount++;
             parsed = strtok(NULL, " ");
         }
         lineCounter++;
@@ -323,6 +345,5 @@ int main(int argc, char *argv[])
     struct cluster_t *clusters;
     int *fileName = argv[1];
     int numberOfClusters = load_clusters(fileName, clusters);
-    printf("%d",clusters[0].obj->id);
     // TODO
 }
