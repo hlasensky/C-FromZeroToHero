@@ -138,7 +138,6 @@ struct cluster_t *resize_cluster(struct cluster_t *c, int new_cap)
  */
 void append_cluster(struct cluster_t *c, struct obj_t obj)
 {
-    // TODO
     if (c->capacity == c->size)
     {
         c = resize_cluster(c, c->capacity++);
@@ -192,7 +191,9 @@ float obj_distance(struct obj_t *o1, struct obj_t *o2)
     assert(o1 != NULL);
     assert(o2 != NULL);
 
-    // TODO
+    double distance = powf(powf((o1->x - o2->x), 2) + powf((o1->y - o2->y), 2), 1 / 2);
+    printf("%f", distance);
+    // TODO https://cs.abcdef.wiki/wiki/Euclidean_distance
 }
 
 /*
@@ -205,7 +206,7 @@ float cluster_distance(struct cluster_t *c1, struct cluster_t *c2)
     assert(c2 != NULL);
     assert(c2->size > 0);
 
-    // TODO
+    // TODO https://cs.abcdef.wiki/wiki/Euclidean_distance
 }
 
 /*
@@ -334,7 +335,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
     fclose(fp);
     if (line)
         free(line);
-    
+
     return --lineCounter;
 }
 
@@ -360,7 +361,7 @@ int main(int argc, char *argv[])
     numberOfClusters = load_clusters(fileName, &clusters);
     print_clusters(clusters, numberOfClusters);
     // TODO
-
+    obj_distance(&clusters[0], &clusters[2]);
     for (int i = 0; i < numberOfClusters; i++)
     {
         clear_cluster(&clusters[i]);
