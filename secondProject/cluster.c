@@ -282,20 +282,26 @@ int load_clusters(char *filename, struct cluster_t **arr)
         {
             if (lineCounter > 0)
             {
-                init_cluster(&arr[lineCounter - 1], 1);
+                if (parsedItemCount % 3 == 0)
+                {
+                    init_cluster(&((*arr)[lineCounter - 1]), 1);
+                    (*arr)[lineCounter - 1].size = 1;
+                }
+
                 switch (parsedItemCount)
                 {
                 case 0:
-                    printf("HI");
-                    arr[lineCounter - 1]->obj[0].id = atoi(parsed);
-                    printf("hi%d %d\n", 69, arr[lineCounter - 1]->obj[0].id);
+                    (*arr)[lineCounter - 1].obj[0].id = atoi(parsed);
+                    // printf("%d\n", (*arr)[lineCounter - 1].obj[0].id);
                     break;
                 case 1:
-                    arr[lineCounter - 1]->obj->x = strtof(parsed, NULL);
-                    printf("hi%f\n", arr[lineCounter - 1]->obj->x);
+                    (*arr)[lineCounter - 1].obj[0].x = atof(parsed);
+                    // printf("%f\n", (*arr)[lineCounter - 1].obj[0].x);
                     break;
                 case 2:
-                    arr[lineCounter - 1]->obj->y = strtof(parsed, NULL);
+                    (*arr)[lineCounter - 1].obj[0].y = atof(parsed);
+                    // printf("%f\n", (*arr)[lineCounter - 1].obj[0].y);
+
                     break;
                 }
             }
@@ -319,11 +325,11 @@ int load_clusters(char *filename, struct cluster_t **arr)
         }
         lineCounter++;
     }
-
     fclose(fp);
     if (line)
         free(line);
-    exit(EXIT_SUCCESS);
+    lineCounter--;
+    return lineCounter;
 }
 
 /*
@@ -344,6 +350,15 @@ int main(int argc, char *argv[])
 {
     struct cluster_t *clusters;
     int *fileName = argv[1];
-    int numberOfClusters = load_clusters(fileName, clusters);
+    int numberOfClusters;
+    numberOfClusters = load_clusters(fileName, &clusters);
+    print_clusters(clusters, numberOfClusters);
     // TODO
+
+
+    for (int i = 0; i < numberOfClusters; i++)
+    {
+        clear_cluster(&clusters[i]);
+    }
+
 }
