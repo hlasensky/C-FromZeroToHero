@@ -5,9 +5,10 @@
  * Single linkage
  */
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <math.h> // sqrtf
+#include <math.h>   // sqrtf
 #include <limits.h> // INT_MAX
 
 /*****************************************************************
@@ -28,7 +29,10 @@
 #define debug(s) printf("- %s\n", s)
 
 // vypise formatovany ladici vystup - pouziti podobne jako printf
-#define dfmt(s, ...) printf(" - "__FILE__":%u: "s"\n",__LINE__,__VA_ARGS__)
+#define dfmt(s, ...) printf(" - "__FILE__ \
+                            ":%u: "s      \
+                            "\n",         \
+                            __LINE__, __VA_ARGS__)
 
 // vypise ladici informaci o promenne - pouziti dint(identifikator_promenne)
 #define dint(i) printf(" - " __FILE__ ":%u: " #i " = %d\n", __LINE__, i)
@@ -52,13 +56,15 @@
  *      ukazatel na pole shluku.
  */
 
-struct obj_t {
+struct obj_t
+{
     int id;
     float x;
     float y;
 };
 
-struct cluster_t {
+struct cluster_t
+{
     int size;
     int capacity;
     struct obj_t *obj;
@@ -120,7 +126,7 @@ struct cluster_t *resize_cluster(struct cluster_t *c, int new_cap)
     if (arr == NULL)
         return NULL;
 
-    c->obj = (struct obj_t*)arr;
+    c->obj = (struct obj_t *)arr;
     c->capacity = new_cap;
     return c;
 }
@@ -132,7 +138,6 @@ struct cluster_t *resize_cluster(struct cluster_t *c, int new_cap)
 void append_cluster(struct cluster_t *c, struct obj_t obj)
 {
     // TODO
-
 }
 
 /*
@@ -212,8 +217,10 @@ static int obj_sort_compar(const void *a, const void *b)
     // TUTO FUNKCI NEMENTE
     const struct obj_t *o1 = (const struct obj_t *)a;
     const struct obj_t *o2 = (const struct obj_t *)b;
-    if (o1->id < o2->id) return -1;
-    if (o1->id > o2->id) return 1;
+    if (o1->id < o2->id)
+        return -1;
+    if (o1->id > o2->id)
+        return 1;
     return 0;
 }
 
@@ -234,7 +241,8 @@ void print_cluster(struct cluster_t *c)
     // TUTO FUNKCI NEMENTE
     for (int i = 0; i < c->size; i++)
     {
-        if (i) putchar(' ');
+        if (i)
+            putchar(' ');
         printf("%d[%g,%g]", c->obj[i].id, c->obj[i].x, c->obj[i].y);
     }
     putchar('\n');
@@ -250,8 +258,50 @@ void print_cluster(struct cluster_t *c)
 int load_clusters(char *filename, struct cluster_t **arr)
 {
     assert(arr != NULL);
-
     // TODO
+    FILE *fp;
+    char *line = NULL;
+    char *parsed = NULL;
+    size_t len = 0;
+    size_t read;
+    int lineCounter = 0;
+
+    fp = fopen(filename, "r");
+    if (fp == NULL)
+        exit(EXIT_FAILURE);
+
+    while ((read = getline(&line, &len, fp)) != -1)
+    {
+        int parsedItemCount = 0;
+        parsed = strtok(line, " ");
+
+        /* walk through other tokens */
+        while (parsed != NULL)
+        {
+            if (lineCounter > 0)
+            {
+                switch (parsedItemCount)
+                {
+                case 0:
+                    arr[lineCounter]->obj->id = parsed;
+                    break;
+                case 1:
+                    strtof(parsed, &arr[lineCounter]->obj->x);
+                    break;
+                case 2:
+                    strtof(parsed, &arr[lineCounter]->obj->y);
+                    break;
+                }
+            }
+            parsed = strtok(NULL, " ");
+        }
+        lineCounter++;
+    }
+
+    fclose(fp);
+    if (line)
+        free(line);
+    exit(EXIT_SUCCESS);
 }
 
 /*
@@ -271,6 +321,8 @@ void print_clusters(struct cluster_t *carr, int narr)
 int main(int argc, char *argv[])
 {
     struct cluster_t *clusters;
-
+    int *fileName = argv[1];
+    int numberOfClusters = load_clusters(fileName, clusters);
+    printf("%d",clusters[0].obj->id);
     // TODO
 }
