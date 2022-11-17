@@ -286,8 +286,9 @@ int load_clusters(char *filename, struct cluster_t **arr)
                 switch (parsedItemCount)
                 {
                 case 0:
-                    (arr[0]->obj[0]).id = atoi(parsed);
-                    printf("hi%d", (arr[0]->obj[0].id));
+                    printf("HI");
+                    arr[lineCounter - 1]->obj[0].id = atoi(parsed);
+                    printf("hi%d %d\n", 69, arr[lineCounter - 1]->obj[0].id);
                     break;
                 case 1:
                     arr[lineCounter - 1]->obj->x = strtof(parsed, NULL);
@@ -307,8 +308,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
                     if (i > 0)
                     {
                         int count = countPointer;
-                        printf("%s\n", count);
-                        arr = malloc(count * sizeof(struct cluster_t));
+                        *arr = malloc(count * sizeof(struct cluster_t));
                     }
                     countPointer = strtok(NULL, "=");
                     i++;
