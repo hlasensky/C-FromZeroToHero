@@ -153,7 +153,6 @@ void append_cluster(struct cluster_t *c, struct obj_t obj)
  */
 void merge_clusters(struct cluster_t *c1, struct cluster_t *c2)
 {
-    // TODO merge cluster
     assert(c1 != NULL);
     assert(c2 != NULL);
 
@@ -183,7 +182,15 @@ int remove_cluster(struct cluster_t *carr, int narr, int idx)
     assert(idx < narr);
     assert(narr > 0);
 
-    // TODO remove cluster
+    // FIXME remove cluster
+    int capacity = narr;
+    for (int i = idx; i < capacity; i++)
+    {
+        carr[i] = carr[i + 1];
+    }
+    int newCapArr = --capacity;
+    resize_cluster(carr, newCapArr);
+    return newCapArr;
 }
 
 /*
@@ -389,35 +396,23 @@ void print_clusters(struct cluster_t *carr, int narr)
     }
 }
 
-void resizeClusterArr(struct cluster_t *carr, int startId, int *cap)
-{
-    int capacity = *cap;
-    for (int i = startId; i < capacity; i++)
-    {
-        carr[i] = carr[i + 1];
-    }
-    int newCap = --capacity;
-    resize_cluster(carr, newCap);
-    *cap = newCap;
-}
-
 int main(int argc, char *argv[])
 {
     struct cluster_t *clusters;
     char *fileName = argv[1];
     char *numberOfFinallClusters = argv[2];
     int indexC1, indexC2;
-    int numberOfClusters;
+    int numberOfClusters = 0;
     numberOfClusters = load_clusters(fileName, &clusters);
-    for (size_t i = 0; i < numberOfClusters; i++)
-    {
-        find_neighbours(clusters, numberOfClusters, &indexC1, &indexC2);
-        merge_clusters(&clusters[indexC1], &clusters[indexC2]);
-        resizeClusterArr(clusters, indexC2, &numberOfClusters);
-    }
 
-    printf("%d\n", numberOfClusters);
+    while (numberOfClusters > atoi(numberOfFinallClusters))
+    {
+    find_neighbours(clusters, numberOfClusters, &indexC1, &indexC2);
+    merge_clusters(&clusters[indexC1], &clusters[indexC2]);
+    numberOfClusters = remove_cluster(clusters, numberOfClusters, indexC2);
+    }
     print_clusters(clusters, numberOfClusters);
+
     for (int i = 0; i < numberOfClusters; i++)
     {
         clear_cluster(&clusters[i]);
