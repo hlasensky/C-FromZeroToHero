@@ -4,6 +4,7 @@
  * Jednoducha shlukova analyza: 2D nejblizsi soused.
  * Single linkage
  */
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -143,8 +144,11 @@ void append_cluster(struct cluster_t *c, struct obj_t obj)
     c->obj[c->size].id = obj.id;
     c->obj[c->size].x = obj.x;
     c->obj[c->size].y = obj.y;
-    c->size = ++(c->size);
+    int newSize = c->size + 1;
+    c->size = newSize;
 }
+
+void sort_cluster(struct cluster_t *c);
 
 /*
  Do shluku 'c1' prida objekty 'c2'. Shluk 'c1' bude v pripade nutnosti rozsiren.
@@ -182,7 +186,6 @@ int remove_cluster(struct cluster_t *carr, int narr, int idx)
     assert(idx < narr);
     assert(narr > 0);
 
-    // FIXME remove cluster
     int capacity = narr;
     for (int i = idx; i < capacity; i++)
     {
@@ -320,7 +323,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
     char *countPointer = NULL;
     int lineCounter = 0;
     size_t len = 0;
-    size_t read;
+    signed read;
 
     fp = fopen(filename, "r");
     if (fp == NULL)
@@ -361,7 +364,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
                 {
                     if (i > 0)
                     {
-                        int count = countPointer;
+                        int count = atoi(countPointer);
                         *arr = malloc(count * sizeof(struct cluster_t));
                     }
                     countPointer = strtok(NULL, "=");
@@ -398,18 +401,24 @@ void print_clusters(struct cluster_t *carr, int narr)
 
 int main(int argc, char *argv[])
 {
+    // TODO check arguments
+    // TODO check data
     struct cluster_t *clusters;
     char *fileName = argv[1];
     char *numberOfFinallClusters = argv[2];
     int indexC1, indexC2;
-    int numberOfClusters = 0;
+    int numberOfClusters;
+
     numberOfClusters = load_clusters(fileName, &clusters);
 
-    while (numberOfClusters > atoi(numberOfFinallClusters))
+    if (argc > 2)
     {
-    find_neighbours(clusters, numberOfClusters, &indexC1, &indexC2);
-    merge_clusters(&clusters[indexC1], &clusters[indexC2]);
-    numberOfClusters = remove_cluster(clusters, numberOfClusters, indexC2);
+        while (numberOfClusters > atoi(numberOfFinallClusters))
+        {
+            find_neighbours(clusters, numberOfClusters, &indexC1, &indexC2);
+            merge_clusters(&clusters[indexC1], &clusters[indexC2]);
+            numberOfClusters = remove_cluster(clusters, numberOfClusters, indexC2);
+        }
     }
     print_clusters(clusters, numberOfClusters);
 
