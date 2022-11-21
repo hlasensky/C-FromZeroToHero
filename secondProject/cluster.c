@@ -170,6 +170,7 @@ void merge_clusters(struct cluster_t *c1, struct cluster_t *c2)
         append_cluster(c1, c2->obj[i]);
     }
     sort_cluster(c1);
+
 }
 
 /**********************************************************************/
@@ -184,7 +185,6 @@ int remove_cluster(struct cluster_t *carr, int narr, int idx)
 {
     assert(idx < narr);
     assert(narr > 0);
-
     int capacity = narr;
     for (int i = idx; i < capacity; i++)
     {
@@ -248,7 +248,7 @@ void find_neighbours(struct cluster_t *carr, int narr, int *c1, int *c2)
     int c2id;
 
     *c1 = 0;
-    *c2 = 0;
+    *c2 = 1;
 
     double minDistance = cluster_distance(&carr[0], &carr[1], &c1id, &c2id);
     for (int i = 0; i < narr; i++)
@@ -407,7 +407,7 @@ int main(int argc, char *argv[])
     struct cluster_t *clusters;
     char *fileName = argv[1];
     char *numClas = argv[2];
-    int numberOfFinallClusters = 1;
+    int numberOfFinallClusters;
     int indexC1, indexC2;
     int numberOfClusters;
 
@@ -416,9 +416,6 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Please enter filename!");
         exit(EXIT_FAILURE);
     }
-
-    numberOfClusters = load_clusters(fileName, &clusters);
-
     if (argc == 3)
     {
         numberOfFinallClusters = atoi(numClas);
@@ -428,11 +425,17 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Please enter valide argument!");
         exit(EXIT_FAILURE);
     }
+    if (argc == 2)
+    {
+        numberOfFinallClusters = 1;
+    }
     if (argc > 3)
     {
         fprintf(stderr, "Too many arguments!");
         exit(EXIT_FAILURE);
     }
+
+    numberOfClusters = load_clusters(fileName, &clusters);
 
     while (numberOfClusters > numberOfFinallClusters)
     {
@@ -440,7 +443,7 @@ int main(int argc, char *argv[])
         find_neighbours(clusters, numberOfClusters, &indexC1, &indexC2);
         merge_clusters(&clusters[indexC1], &clusters[indexC2]);
         numberOfClusters = remove_cluster(clusters, numberOfClusters, indexC2);
-        printf("HI%d a %d\n", numberOfFinallClusters, numberOfClusters);
+        // printf("HI%d a %d\n", numberOfFinallClusters, numberOfClusters);
     }
 
     print_clusters(clusters, numberOfClusters);
