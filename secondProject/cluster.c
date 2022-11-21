@@ -405,21 +405,37 @@ int main(int argc, char *argv[])
     // TODO check data
     struct cluster_t *clusters;
     char *fileName = argv[1];
-    char *numberOfFinallClusters = argv[2];
+    char *numClas = argv[2];
+    int numberOfFinallClusters = 1;
     int indexC1, indexC2;
     int numberOfClusters;
 
     numberOfClusters = load_clusters(fileName, &clusters);
 
-    if (argc > 2)
+    if (argc == 3)
     {
-        while (numberOfClusters > atoi(numberOfFinallClusters))
-        {
-            find_neighbours(clusters, numberOfClusters, &indexC1, &indexC2);
-            merge_clusters(&clusters[indexC1], &clusters[indexC2]);
-            numberOfClusters = remove_cluster(clusters, numberOfClusters, indexC2);
-        }
+        numberOfFinallClusters = atoi(numClas);
     }
+    else if (numberOfFinallClusters == 0)
+    {
+        fprintf(stderr, "Please enter valide argument!");
+        exit(EXIT_FAILURE);
+    }
+    else if (argc > 3)
+    {
+        fprintf(stderr, "Too many arguments!");
+        exit(EXIT_FAILURE);
+    }
+
+    while (numberOfClusters > numberOfFinallClusters)
+    {
+
+        find_neighbours(clusters, numberOfClusters, &indexC1, &indexC2);
+        merge_clusters(&clusters[indexC1], &clusters[indexC2]);
+        numberOfClusters = remove_cluster(clusters, numberOfClusters, indexC2);
+        printf("HI%d a %d\n", numberOfFinallClusters, numberOfClusters);
+    }
+
     print_clusters(clusters, numberOfClusters);
 
     for (int i = 0; i < numberOfClusters; i++)
