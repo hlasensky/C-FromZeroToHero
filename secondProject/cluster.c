@@ -410,6 +410,12 @@ int main(int argc, char *argv[])
     int indexC1, indexC2;
     int numberOfClusters;
 
+    if (!fileName)
+    {
+        fprintf(stderr, "Please enter filename!");
+        exit(EXIT_FAILURE);
+    }
+
     numberOfClusters = load_clusters(fileName, &clusters);
 
     if (argc == 3)
