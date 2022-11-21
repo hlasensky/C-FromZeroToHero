@@ -160,17 +160,16 @@ void merge_clusters(struct cluster_t *c1, struct cluster_t *c2)
     assert(c1 != NULL);
     assert(c2 != NULL);
 
-    sort_cluster(c1);
     int newCap = c1->size + c2->size;
     if (newCap > c1->capacity)
     {
         resize_cluster(c1, newCap);
     }
-    for (signed i = 0; i < c2->size; i++)
+    for (int i = 0; i < c2->size; i++)
     {
         append_cluster(c1, c2->obj[i]);
     }
-    clear_cluster(c2);
+    sort_cluster(c1);
 }
 
 /**********************************************************************/
@@ -192,7 +191,6 @@ int remove_cluster(struct cluster_t *carr, int narr, int idx)
         carr[i] = carr[i + 1];
     }
     int newCapArr = --capacity;
-    resize_cluster(carr, newCapArr);
     return newCapArr;
 }
 
@@ -221,9 +219,9 @@ float cluster_distance(struct cluster_t *c1, struct cluster_t *c2, int *c1id, in
 
     double minDistance = obj_distance(&c1->obj[0], &c2->obj[1]);
 
-    for (signed c1_i = 0; c1_i < c1->size; c1_i++)
+    for (int c1_i = 0; c1_i < c1->size; c1_i++)
     {
-        for (signed c2_y = 0; c2_y < c2->size; c2_y++)
+        for (int c2_y = 0; c2_y < c2->size; c2_y++)
         {
             double distanceOfObjects = obj_distance(&c1->obj[c1_i], &c2->obj[c2_y]);
             if (distanceOfObjects < minDistance)
@@ -248,6 +246,9 @@ void find_neighbours(struct cluster_t *carr, int narr, int *c1, int *c2)
     assert(narr > 0);
     int c1id;
     int c2id;
+
+    *c1 = 0;
+    *c2 = 0;
 
     double minDistance = cluster_distance(&carr[0], &carr[1], &c1id, &c2id);
     for (int i = 0; i < narr; i++)
@@ -323,7 +324,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
     char *countPointer = NULL;
     int lineCounter = 0;
     size_t len = 0;
-    signed read;
+    int read;
 
     fp = fopen(filename, "r");
     if (fp == NULL)
@@ -444,7 +445,7 @@ int main(int argc, char *argv[])
 
     print_clusters(clusters, numberOfClusters);
 
-    for (int i = 0; i <= numberOfClusters; i++)
+    for (int i = 0; i < numberOfClusters; i++)
     {
         clear_cluster(&clusters[i]);
     }
