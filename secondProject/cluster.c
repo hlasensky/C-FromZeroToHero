@@ -422,12 +422,12 @@ int main(int argc, char *argv[])
     {
         numberOfFinallClusters = atoi(numClas);
     }
-    else if (numberOfFinallClusters == 0)
+    if (numberOfFinallClusters <= 0)
     {
         fprintf(stderr, "Please enter valide argument!");
         exit(EXIT_FAILURE);
     }
-    else if (argc > 3)
+    if (argc > 3)
     {
         fprintf(stderr, "Too many arguments!");
         exit(EXIT_FAILURE);
@@ -444,8 +444,10 @@ int main(int argc, char *argv[])
 
     print_clusters(clusters, numberOfClusters);
 
-    for (int i = 0; i < numberOfClusters; i++)
+    for (int i = 0; i <= numberOfClusters; i++)
     {
         clear_cluster(&clusters[i]);
     }
+    free(clusters);
+    exit(EXIT_SUCCESS);
 }
