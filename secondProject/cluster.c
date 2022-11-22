@@ -137,10 +137,6 @@ struct cluster_t *resize_cluster(struct cluster_t *c, int new_cap)
  */
 void append_cluster(struct cluster_t *c, struct obj_t obj)
 {
-    if (c->capacity <= c->size)
-    {
-        c = resize_cluster(c, ++c->capacity);
-    }
     c->obj[c->size].id = obj.id;
     c->obj[c->size].x = obj.x;
     c->obj[c->size].y = obj.y;
