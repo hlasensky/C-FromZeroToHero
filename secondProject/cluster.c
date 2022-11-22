@@ -348,7 +348,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
                     break;
                 case 2:
                     temporaryObj.y = atof(parsed);
-                    init_cluster(&(*arr)[lineCounter - 1], 1);
+                    init_cluster(&(*arr)[lineCounter - 1], CLUSTER_CHUNK);
                     append_cluster(&(*arr)[lineCounter - 1], temporaryObj);
                     break;
                 }
