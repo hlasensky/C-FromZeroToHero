@@ -197,7 +197,16 @@ float obj_distance(struct obj_t *o1, struct obj_t *o2)
     assert(o1 != NULL);
     assert(o2 != NULL);
 
-    double distance = sqrt(powf((o1->x - o2->x), 2) + powf((o1->y - o2->y), 2));
+    double x_o1 = o1->x;
+    double y_o1 = o1->y;
+
+    double x_o2 = o2->x;
+    double y_o2 = o2->y;
+
+    double x = powf((x_o1 - x_o2), 2);
+    double y = powf((y_o1 - y_o2), 2);
+
+    double distance = sqrt(x + y);
     // printf("%f", distance);
     return distance;
 }
@@ -372,7 +381,6 @@ int load_clusters(char *filename, struct cluster_t **arr)
             parsedItemCount++;
         }
         lineCounter++;
-
     }
 
     fclose(fp);
