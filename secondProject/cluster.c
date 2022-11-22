@@ -166,7 +166,6 @@ void merge_clusters(struct cluster_t *c1, struct cluster_t *c2)
         append_cluster(c1, c2->obj[i]);
     }
     sort_cluster(c1);
-
 }
 
 /**********************************************************************/
@@ -359,7 +358,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
                 int i = 0;
                 while (countPointer != NULL)
                 {
-                    if (i > 0)
+                    if (i == 1)
                     {
                         int count = atoi(countPointer);
                         *arr = malloc(count * sizeof(struct cluster_t));
@@ -373,6 +372,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
             parsedItemCount++;
         }
         lineCounter++;
+
     }
 
     fclose(fp);
