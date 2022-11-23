@@ -209,7 +209,7 @@ float obj_distance(struct obj_t *o1, struct obj_t *o2)
 /*
  Pocita vzdalenost dvou shluku.
 */
-float cluster_distance(struct cluster_t *c1, struct cluster_t *c2, int *c1id, int *c2id)
+float cluster_distance(struct cluster_t *c1, struct cluster_t *c2)
 {
     assert(c1 != NULL);
     assert(c1->size > 0);
@@ -229,8 +229,6 @@ float cluster_distance(struct cluster_t *c1, struct cluster_t *c2, int *c1id, in
             if (distanceOfObjects < minDistance)
             {
                 minDistance = distanceOfObjects;
-                *c1id = c1->obj[c1_i].id;
-                *c2id = c2->obj[c2_y].id;
             }
         }
     }
@@ -246,21 +244,19 @@ float cluster_distance(struct cluster_t *c1, struct cluster_t *c2, int *c1id, in
 void find_neighbours(struct cluster_t *carr, int narr, int *c1, int *c2)
 {
     assert(narr > 0);
-    int c1id;
-    int c2id;
 
     *c1 = 0;
     *c2 = 1;
 
-    double minDistance = cluster_distance(&carr[0], &carr[1], &c1id, &c2id);
+    double minDistance = cluster_distance(&carr[0], &carr[1]);
     for (int i = 0; i < narr; i++)
     {
         for (int y = 0; y < narr; y++)
         {
             if (i != y)
             {
+                double distance = cluster_distance(&carr[i], &carr[y]);
 
-                double distance = cluster_distance(&carr[i], &carr[y], &c1id, &c2id);
                 if (minDistance > distance)
                 {
                     minDistance = distance;
