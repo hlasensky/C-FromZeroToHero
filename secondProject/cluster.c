@@ -198,12 +198,10 @@ float obj_distance(struct obj_t *o1, struct obj_t *o2)
     assert(o1 != NULL);
     assert(o2 != NULL);
 
-    double x, y, distance;
+    double x = powf((o1->x - o2->x), 2);
+    double y = powf((o1->y - o2->y), 2);
 
-    x = powf((o1->x - o2->x), 2);
-    y = powf((o1->y - o2->y), 2);
-
-    distance = sqrt(x + y);
+    double distance = sqrt(x + y);
     // printf("%f", distance);
     return distance;
 }
@@ -223,9 +221,9 @@ float cluster_distance(struct cluster_t *c1, struct cluster_t *c2, int *c1id, in
 
     double minDistance = obj_distance(o1, o2);
 
-    for (int c1_i = 0; c1_i < c1->size; c1_i++)
+    for (int c1_i = 0; c1_i < c1->size - 1; c1_i++)
     {
-        for (int c2_y = 0; c2_y < c2->size; c2_y++)
+        for (int c2_y = 0; c2_y < c2->size - 1; c2_y++)
         {
             double distanceOfObjects = obj_distance(&c1->obj[c1_i], &c2->obj[c2_y]);
             if (distanceOfObjects < minDistance)
@@ -261,7 +259,7 @@ void find_neighbours(struct cluster_t *carr, int narr, int *c1, int *c2)
         {
             if (i != y)
             {
-                
+
                 double distance = cluster_distance(&carr[i], &carr[y], &c1id, &c2id);
                 if (minDistance > distance)
                 {
