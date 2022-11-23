@@ -412,7 +412,7 @@ int main(int argc, char *argv[])
     char *numClas = argv[2];
     int numberOfFinallClusters = 1;
     int indexC1, indexC2;
-    int numberOfClusters;
+    int numberOfClusters = 1;
 
     if (!fileName)
     {
