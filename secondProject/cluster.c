@@ -431,6 +431,7 @@ int main(int argc, char *argv[])
 
     while (numberOfClusters != numberOfFinallClusters)
     {
+        printf("%d\n", numberOfClusters);
 
         find_neighbours(clusters, numberOfClusters, &indexC1, &indexC2);
         merge_clusters(&clusters[indexC1], &clusters[indexC2]);
