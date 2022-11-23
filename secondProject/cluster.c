@@ -436,7 +436,7 @@ int main(int argc, char *argv[])
 
     numberOfClusters = load_clusters(fileName, &clusters);
 
-    while (numberOfClusters > numberOfFinallClusters)
+    while (numberOfClusters != numberOfFinallClusters)
     {
 
         find_neighbours(clusters, numberOfClusters, &indexC1, &indexC2);
