@@ -320,6 +320,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
     char *countPointer = NULL;
     int lineCounter = 0;
     size_t len = 0;
+    int count = 1;
     int read;
 
     fp = fopen(filename, "r");
@@ -351,17 +352,19 @@ int load_clusters(char *filename, struct cluster_t **arr)
                     init_cluster(&(*arr)[lineCounter - 1], CLUSTER_CHUNK);
                     append_cluster(&(*arr)[lineCounter - 1], temporaryObj);
                     break;
+                default:
+                    break;
                 }
             }
             else
             {
-                countPointer = strtok(parsed, "=");
                 int i = 0;
+                countPointer = strtok(parsed, "=");
                 while (countPointer != NULL)
                 {
                     if (i == 1)
                     {
-                        int count = atoi(countPointer);
+                        count = atoi(countPointer);
                         *arr = malloc(count * sizeof(struct cluster_t));
                     }
                     countPointer = strtok(NULL, "=");
@@ -379,7 +382,11 @@ int load_clusters(char *filename, struct cluster_t **arr)
     if (line)
         free(line);
 
-    return --lineCounter;
+    if (count == 1) {
+        fprintf(stderr, "Please enter valid data!");
+        exit(EXIT_FAILURE);
+    }
+    return count;
 }
 
 /*
@@ -431,7 +438,6 @@ int main(int argc, char *argv[])
 
     while (numberOfClusters != numberOfFinallClusters)
     {
-        printf("%d\n", numberOfClusters);
 
         find_neighbours(clusters, numberOfClusters, &indexC1, &indexC2);
         merge_clusters(&clusters[indexC1], &clusters[indexC2]);
