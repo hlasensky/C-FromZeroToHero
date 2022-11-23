@@ -216,7 +216,7 @@ float cluster_distance(struct cluster_t *c1, struct cluster_t *c2)
     assert(c2 != NULL);
     assert(c2->size > 0);
 
-    double minDistance = obj_distance(&c1->obj[0], &c2->obj[1]);
+    double minDistance = obj_distance(&c1->obj[0], &c2->obj[0]);
 
     for (int c1_i = 0; c1_i < c1->size; c1_i++)
     {
@@ -412,7 +412,7 @@ int main(int argc, char *argv[])
     char *numClas = argv[2];
     int numberOfFinallClusters = 1;
     int indexC1, indexC2;
-    int numberOfClusters = 1;
+    int numberOfClusters;
 
     if (!fileName)
     {
