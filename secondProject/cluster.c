@@ -253,20 +253,15 @@ void find_neighbours(struct cluster_t *carr, int narr, int *c1, int *c2)
     *c1 = 0;
     *c2 = 1;
 
-    struct cluster_t *carrOnIndexI = &carr[0];
-    struct cluster_t *carrOnIndexY = &carr[1];
-
-    double minDistance = cluster_distance(carrOnIndexI, carrOnIndexY, &c1id, &c2id);
+    double minDistance = cluster_distance(&carr[0], &carr[1], &c1id, &c2id);
     for (int i = 0; i < narr; i++)
     {
         for (int y = 0; y < narr; y++)
         {
             if (i != y)
             {
-                carrOnIndexI = &carr[i];
-                carrOnIndexY = &carr[y];
                 
-                double distance = cluster_distance(carrOnIndexI, carrOnIndexY, &c1id, &c2id);
+                double distance = cluster_distance(&carr[i], &carr[y], &c1id, &c2id);
                 if (minDistance > distance)
                 {
                     minDistance = distance;
