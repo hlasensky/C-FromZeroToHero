@@ -411,7 +411,7 @@ int main(int argc, char *argv[])
     struct cluster_t *clusters;
     char *fileName = argv[1];
     char *numClas = argv[2];
-    int numberOfFinallClusters;
+    int numberOfFinallClusters = 1;
     int indexC1, indexC2;
     int numberOfClusters;
 
@@ -428,10 +428,6 @@ int main(int argc, char *argv[])
     {
         fprintf(stderr, "Please enter valide argument!");
         exit(EXIT_FAILURE);
-    }
-    if (argc == 2)
-    {
-        numberOfFinallClusters = 1;
     }
     if (argc > 3)
     {
