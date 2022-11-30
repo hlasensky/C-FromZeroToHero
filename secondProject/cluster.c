@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <errno.h>
 #include <math.h>   // sqrtf
 #include <limits.h> // INT_MAX
 
@@ -337,6 +338,11 @@ int load_clusters(char *filename, struct cluster_t **arr)
         {
             if (lineCounter > 0)
             {
+                if (*parsed == '\n')
+                {
+                    fprintf(stderr, "Please enter valid data!");
+                    exit(EXIT_FAILURE);
+                }
                 switch (parsedItemCount)
                 {
                 case 0:
@@ -352,12 +358,17 @@ int load_clusters(char *filename, struct cluster_t **arr)
                     init_cluster(&(*arr)[lineCounter - 1], CLUSTER_CHUNK);
                     append_cluster(&(*arr)[lineCounter - 1], temporaryObj);
                     break;
-                default:
+                default: 
                     break;
                 }
             }
             else
             {
+                if (parsed[5] != '=')
+                {
+                    fprintf(stderr, "Please enter valid data!");
+                    exit(EXIT_FAILURE);
+                }
                 int i = 0;
                 countPointer = strtok(parsed, "=");
                 while (countPointer != NULL)
@@ -375,6 +386,11 @@ int load_clusters(char *filename, struct cluster_t **arr)
             parsed = strtok(NULL, " ");
             parsedItemCount++;
         }
+        if (parsedItemCount != 3 && lineCounter != 0)
+        {
+            fprintf(stderr, "Enter valid format for data!");
+            exit(EXIT_FAILURE);
+        }
         lineCounter++;
     }
 
@@ -382,7 +398,8 @@ int load_clusters(char *filename, struct cluster_t **arr)
     if (line)
         free(line);
 
-    if (count == 1) {
+    if (count == 1)
+    {
         fprintf(stderr, "Please enter valid data!");
         exit(EXIT_FAILURE);
     }
