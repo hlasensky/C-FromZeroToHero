@@ -89,6 +89,7 @@ void init_cluster(struct cluster_t *c, int cap)
 {
     assert(c != NULL);
     assert(cap >= 0);
+    
     c->capacity = cap;
     c->size = 0;
     c->obj = malloc(cap * sizeof(struct obj_t));
@@ -181,9 +182,11 @@ int remove_cluster(struct cluster_t *carr, int narr, int idx)
 {
     assert(idx < narr);
     assert(narr > 0);
+
     int capacity = narr;
-    clear_cluster(&carr[idx]);
-    for (int i = idx; i < capacity - 1; i++)
+    clear_cluster(&carr[idx]); //clearing cluster
+
+    for (int i = idx; i < capacity - 1; i++) // filling the space in carr array
     {
         carr[i] = carr[i + 1];
     }
@@ -217,9 +220,9 @@ float cluster_distance(struct cluster_t *c1, struct cluster_t *c2)
     assert(c2 != NULL);
     assert(c2->size > 0);
 
-    double minDistance = obj_distance(&c1->obj[0], &c2->obj[0]);
+    double minDistance = obj_distance(&c1->obj[0], &c2->obj[0]); // setting initial value
 
-    for (int c1_i = 0; c1_i < c1->size; c1_i++)
+    for (int c1_i = 0; c1_i < c1->size; c1_i++) // checking minimal distance between obj_t in clusters
     {
         for (int c2_y = 0; c2_y < c2->size; c2_y++)
         {
@@ -243,11 +246,11 @@ void find_neighbours(struct cluster_t *carr, int narr, int *c1, int *c2)
 {
     assert(narr > 0);
 
-    *c1 = 0;
+    *c1 = 0;// setting initial values
     *c2 = 1;
 
     double minDistance = cluster_distance(&carr[0], &carr[1]);
-    for (int i = 0; i < narr; i++)
+    for (int i = 0; i < narr; i++) // checking minimal distance between clusters
     {
         for (int y = 0; y < narr; y++)
         {
@@ -328,25 +331,25 @@ int load_clusters(char *filename, struct cluster_t **arr)
     if (fp == NULL)
         exit(EXIT_FAILURE);
 
-    while ((read = getline(&line, &len, fp)) != EOF)
+    while ((read = getline(&line, &len, fp)) != EOF) // parsig file on lines
     {
         int parsedItemCount = 0;
 
         parsed = strtok(line, " ");
 
-        while (parsed != NULL)
+        while (parsed != NULL) // parsing line by spaces
         {
-            if (lineCounter > 0)
+            if (lineCounter > 0) 
             {
-                if (*parsed == '\n')
+                if (*parsed == '\n') // check if id, x and y is present
                 {
                     fprintf(stderr, "Please enter valid data!");
                     exit(EXIT_FAILURE);
                 }
-                switch (parsedItemCount)
+                switch (parsedItemCount) // checking what part of line is saved in parsed 0 => id, 1 => x, 2 => y
                 {
                 case 0:
-                    temporaryObj.id = atoi(parsed);
+                    temporaryObj.id = atoi(parsed); 
                     // printf("%d\n", (*arr)[lineCounter - 1].obj[0].id);
                     break;
                 case 1:
@@ -355,28 +358,28 @@ int load_clusters(char *filename, struct cluster_t **arr)
                     break;
                 case 2:
                     temporaryObj.y = atof(parsed);
-                    init_cluster(&(*arr)[lineCounter - 1], CLUSTER_CHUNK);
-                    append_cluster(&(*arr)[lineCounter - 1], temporaryObj);
+                    init_cluster(&(*arr)[lineCounter - 1], CLUSTER_CHUNK); // initializing cluster for data above 
+                    append_cluster(&(*arr)[lineCounter - 1], temporaryObj); // adding data above to init cluster
                     break;
                 default:
                     break;
                 }
             }
             else
-            {
-                if (parsed[5] != '=')
+            { // parsing first line
+                if (parsed[5] != '=') // checking if data are correct
                 {
                     fprintf(stderr, "Please enter valid data!");
                     exit(EXIT_FAILURE);
                 }
                 int i = 0;
-                countPointer = strtok(parsed, "=");
+                countPointer = strtok(parsed, "="); //parsing line by =
                 while (countPointer != NULL)
                 {
-                    if (i == 1)
+                    if (i == 1) // checking if its second part containing number
                     {
                         count = atoi(countPointer);
-                        *arr = malloc(count * sizeof(struct cluster_t));
+                        *arr = malloc(count * sizeof(struct cluster_t)); // allocating memory for number if clusters
                     }
                     countPointer = strtok(NULL, "=");
                     i++;
@@ -386,7 +389,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
             parsed = strtok(NULL, " ");
             parsedItemCount++;
         }
-        if (parsedItemCount != 3 && lineCounter != 0)
+        if (parsedItemCount != 3 && lineCounter != 0) // another check for if data are fully present
         {
             fprintf(stderr, "Enter valid format for data!");
             exit(EXIT_FAILURE);
@@ -398,7 +401,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
     if (line)
         free(line);
 
-    if (count == 1)
+    if (count == 1) //checking if number of clusters is same
     {
         fprintf(stderr, "Please enter valid data!");
         exit(EXIT_FAILURE);
@@ -425,7 +428,7 @@ int main(int argc, char *argv[])
     struct cluster_t *clusters;
     char *fileName = argv[1];
     char *numClas = argv[2];
-    int numberOfFinallClusters = 1;
+    int numberOfFinallClusters = 1; 
     int indexC1, indexC2;
     int numberOfClusters;
 
@@ -436,7 +439,7 @@ int main(int argc, char *argv[])
     }
     if (argc == 3)
     {
-        numberOfFinallClusters = atoi(numClas);
+        numberOfFinallClusters = atoi(numClas); //set number of finall clusters from argv[2]
     }
     if (numberOfFinallClusters <= 0)
     {
@@ -454,10 +457,10 @@ int main(int argc, char *argv[])
     if (numberOfClusters < numberOfFinallClusters)
     {
         fprintf(stderr, "Too many finall clusters!");
-        goto cleanUp;
+        goto cleanUp; //jump and clean up allocated memory
     }
 
-    while (numberOfClusters != numberOfFinallClusters)
+    while (numberOfClusters != numberOfFinallClusters) // going through the algorithm until num of clusters is same as user inputed 
     {
 
         find_neighbours(clusters, numberOfClusters, &indexC1, &indexC2);
@@ -468,10 +471,10 @@ int main(int argc, char *argv[])
 
     print_clusters(clusters, numberOfClusters);
 
-    cleanUp: for (int i = 0; i < numberOfClusters; i++)
+    cleanUp: for (int i = 0; i < numberOfClusters; i++) //freeing allocated memory in clusters
     {
         clear_cluster(&clusters[i]);
     }
-    free(clusters);
+    free(clusters); 
     exit(EXIT_SUCCESS);
 }
