@@ -358,7 +358,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
                     init_cluster(&(*arr)[lineCounter - 1], CLUSTER_CHUNK);
                     append_cluster(&(*arr)[lineCounter - 1], temporaryObj);
                     break;
-                default: 
+                default:
                     break;
                 }
             }
@@ -422,8 +422,6 @@ void print_clusters(struct cluster_t *carr, int narr)
 
 int main(int argc, char *argv[])
 {
-    // TODO check arguments
-    // TODO check data
     struct cluster_t *clusters;
     char *fileName = argv[1];
     char *numClas = argv[2];
@@ -452,6 +450,12 @@ int main(int argc, char *argv[])
     }
 
     numberOfClusters = load_clusters(fileName, &clusters);
+
+    if (numberOfClusters < numberOfFinallClusters)
+    {
+        fprintf(stderr, "Too many finall clusters!");
+        exit(EXIT_FAILURE);
+    }
 
     while (numberOfClusters != numberOfFinallClusters)
     {
