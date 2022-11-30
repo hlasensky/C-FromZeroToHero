@@ -454,7 +454,7 @@ int main(int argc, char *argv[])
     if (numberOfClusters < numberOfFinallClusters)
     {
         fprintf(stderr, "Too many finall clusters!");
-        exit(EXIT_FAILURE);
+        goto cleanUp;
     }
 
     while (numberOfClusters != numberOfFinallClusters)
@@ -468,7 +468,7 @@ int main(int argc, char *argv[])
 
     print_clusters(clusters, numberOfClusters);
 
-    for (int i = 0; i < numberOfClusters; i++)
+    cleanUp: for (int i = 0; i < numberOfClusters; i++)
     {
         clear_cluster(&clusters[i]);
     }
