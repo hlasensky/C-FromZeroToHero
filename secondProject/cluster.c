@@ -307,6 +307,16 @@ void print_cluster(struct cluster_t *c)
     putchar('\n');
 }
 
+int checkIDs(struct cluster_t *arr, int id)
+{
+    for (int i = 0; i < arr->size; i++)
+    {
+        if (id == arr[i].obj[0].id)
+            return 1;
+    }
+    return 0;
+}
+
 /*
  Ze souboru 'filename' nacte objekty. Pro kazdy objekt vytvori shluk a ulozi
  jej do pole shluku. Alokuje prostor pro pole vsech shluku a ukazatel na prvni
@@ -326,10 +336,16 @@ int load_clusters(char *filename, struct cluster_t **arr)
     size_t len = 0;
     int count = 1;
     int read;
+    int id;
+    int x;
+    int y;
 
     fp = fopen(filename, "r");
     if (fp == NULL)
+    {
+        fprintf(stderr, "Please enter valid file name!");
         exit(EXIT_FAILURE);
+    }
 
     while ((read = getline(&line, &len, fp)) != EOF) // parsig file on lines
     {
@@ -349,15 +365,51 @@ int load_clusters(char *filename, struct cluster_t **arr)
                 switch (parsedItemCount) // checking what part of line is saved in parsed 0 => id, 1 => x, 2 => y
                 {
                 case 0:
-                    temporaryObj.id = atoi(parsed);
-                    // printf("%d\n", (*arr)[lineCounter - 1].obj[0].id);
+                    id = atoi(parsed);
+                    if (parsed[0] != '0' && strstr(parsed, ".") != NULL && parsed != NULL)
+                    {
+                        fprintf(stderr, "Please enter valid id!");
+                        exit(EXIT_FAILURE);
+                    }
+                    if (lineCounter > 1) // check if id, x and y is present
+                    {
+                        int er = checkIDs(*arr, id);
+                        if (er)
+                        {
+                            fprintf(stderr, "Please enter valid ids!");
+                            exit(EXIT_FAILURE);
+                        }
+                    }
+                    temporaryObj.id = id;
                     break;
                 case 1:
-                    temporaryObj.x = atof(parsed);
-                    // printf("%f\n", (*arr)[lineCounter - 1].obj[0].x);
+                    x = atof(parsed);
+                    //FIXME
+                    if (strstr(parsed, "x") != NULL) {
+                        fprintf(stderr, "Please enter valid y cordinate!");
+                        exit(EXIT_FAILURE);
+                    }
+                    if (parsed[0] != '0' && strstr(parsed, ".") != NULL && parsed != NULL)
+                    {
+                        fprintf(stderr, "Please enter valid x cordinate!");
+                        exit(EXIT_FAILURE);
+                    }
+                    temporaryObj.x = x;
                     break;
                 case 2:
-                    temporaryObj.y = atof(parsed);
+                    y = atof(parsed);
+                    //FIXME
+                    if (strstr(parsed, "x") != NULL) {
+                        fprintf(stderr, "Please enter valid y cordinate!");
+                        exit(EXIT_FAILURE);
+                    }
+                    if (parsed[0] != '0' && strstr(parsed, ".") != NULL && parsed != NULL)
+                    {
+                        fprintf(stderr, "Please enter valid y cordinate!");
+                        exit(EXIT_FAILURE);
+                    }
+                    temporaryObj.y = y;
+
                     init_cluster(&(*arr)[lineCounter - 1], CLUSTER_CHUNK);  // initializing cluster for data above
                     append_cluster(&(*arr)[lineCounter - 1], temporaryObj); // adding data above to init cluster
                     break;
@@ -471,7 +523,6 @@ int main(int argc, char *argv[])
 
         print_clusters(clusters, numberOfClusters);
     }
-
 
     for (int i = 0; i < numberOfClusters; i++) // freeing allocated memory in clusters
     {
