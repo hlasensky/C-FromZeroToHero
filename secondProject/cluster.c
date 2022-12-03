@@ -334,7 +334,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
     char *countPointer = NULL;
     int lineCounter = 0;
     size_t len = 0;
-    int count = -1;
+    int count = 1;
     int read;
     int id;
     int x;
@@ -366,16 +366,11 @@ int load_clusters(char *filename, struct cluster_t **arr)
                 {
                 case 0:
                     id = atoi(parsed);
-                    if (parsed[0] != '0' && strstr(parsed, ".") != NULL && parsed != NULL)
+                    if ((id == 0 && parsed[0] != '0') || (strstr(parsed, ".") != NULL && parsed != NULL))
                     {
                         fprintf(stderr, "Please enter valid id!");
                         exit(EXIT_FAILURE);
                     }
-                    // if ()
-                    // {
-                    //     fprintf(stderr, "Please enter valid id!");
-                    //     exit(EXIT_FAILURE);
-                    // }
                     if (lineCounter > 1) // check if id, x and y is present
                     {
                         int er = checkIDs(*arr, id);
@@ -389,38 +384,28 @@ int load_clusters(char *filename, struct cluster_t **arr)
                     break;
                 case 1:
                     x = atoi(parsed);
-                    // FIXME
-                    //  if (strstr(parsed, "x") != NULL) {
-                    //      fprintf(stderr, "Please enter valid y cordinate!");
-                    //      exit(EXIT_FAILURE);
-                    //  }
-                    if (x < 0)
-                    {
-                        fprintf(stderr, "Please enter valid x cordinate in range!");
-                        exit(EXIT_FAILURE);
-                    }
-                    if (parsed[0] != '0' && strstr(parsed, ".") != NULL && parsed != NULL)
+                    if ((x == 0 && parsed[0] != '0') || (strstr(parsed, ".") != NULL && parsed != NULL))
                     {
                         fprintf(stderr, "Please enter valid x cordinate!");
+                        exit(EXIT_FAILURE);
+                    }
+                    else if (x < 0 || x > 1000)
+                    {
+                        fprintf(stderr, "Please enter valid x cordinate in range!");
                         exit(EXIT_FAILURE);
                     }
                     temporaryObj.x = x;
                     break;
                 case 2:
                     y = atoi(parsed);
-                    // FIXME
-                    //  if (strstr(parsed, "x") != NULL) {
-                    //      fprintf(stderr, "Please enter valid y cordinate!");
-                    //      exit(EXIT_FAILURE);
-                    //  }
-                    if (y < 0)
-                    {
-                        fprintf(stderr, "Please enter valid y cordinate in range!");
-                        exit(EXIT_FAILURE);
-                    }
-                    if (parsed[0] != '0' && strstr(parsed, ".") != NULL && parsed != NULL)
+                    if ((y == 0 && parsed[0] != '0') || (strstr(parsed, ".") != NULL && parsed != NULL))
                     {
                         fprintf(stderr, "Please enter valid y cordinate!");
+                        exit(EXIT_FAILURE);
+                    }
+                    else if (y < 0 || y > 1000)
+                    {
+                        fprintf(stderr, "Please enter valid y cordinate in range!");
                         exit(EXIT_FAILURE);
                     }
                     temporaryObj.y = y;
@@ -446,6 +431,11 @@ int load_clusters(char *filename, struct cluster_t **arr)
                     if (i == 1) // checking if its second part containing number
                     {
                         count = atoi(countPointer);
+                        if (count <= 0)
+                        {
+                            fprintf(stderr, "Please enter valid count data!");
+                            exit(EXIT_FAILURE);
+                        }
                         *arr = malloc(count * sizeof(struct cluster_t)); // allocating memory for number if clusters
                     }
                     countPointer = strtok(NULL, "=");
@@ -462,10 +452,10 @@ int load_clusters(char *filename, struct cluster_t **arr)
             fprintf(stderr, "Enter valid format for dataa!");
             exit(EXIT_FAILURE);
         }
-        // if (lineCounter >= count +1)
-        // {
-        //     break;
-        // }
+        if (count < lineCounter) // checking if number of clusters is same
+        {
+            break;
+        }
 
         lineCounter++;
     }
@@ -474,11 +464,12 @@ int load_clusters(char *filename, struct cluster_t **arr)
     if (line)
         free(line);
 
-    if (count > lineCounter && count < 1) // checking if number of clusters is same
+    if (count > lineCounter) // checking if number of clusters is same
     {
-        fprintf(stderr, "Please enter valid counter!");
+        fprintf(stderr, "Enter valid format for dataa!");
         exit(EXIT_FAILURE);
     }
+
     return count;
 }
 
@@ -538,15 +529,17 @@ int main(int argc, char *argv[])
     }
     else
     {
-        while (numberOfClusters != numberOfFinallClusters) // going through the algorithm until num of clusters is same as user inputed
+        if (numberOfClusters != 1)
         {
+            while (numberOfClusters != numberOfFinallClusters) // going through the algorithm until num of clusters is same as user inputed
+            {
 
-            find_neighbours(clusters, numberOfClusters, &indexC1, &indexC2);
-            merge_clusters(&clusters[indexC1], &clusters[indexC2]);
-            numberOfClusters = remove_cluster(clusters, numberOfClusters, indexC2);
-            // printf("HI%d a %d\n", numberOfFinallClusters, numberOfClusters);
+                find_neighbours(clusters, numberOfClusters, &indexC1, &indexC2);
+                merge_clusters(&clusters[indexC1], &clusters[indexC2]);
+                numberOfClusters = remove_cluster(clusters, numberOfClusters, indexC2);
+                // printf("HI%d a %d\n", numberOfFinallClusters, numberOfClusters);
+            }
         }
-
         print_clusters(clusters, numberOfClusters);
     }
 
