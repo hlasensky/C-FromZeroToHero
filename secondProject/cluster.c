@@ -452,12 +452,12 @@ int load_clusters(char *filename, struct cluster_t **arr)
             fprintf(stderr, "Enter valid format for dataa!");
             exit(EXIT_FAILURE);
         }
-        if (count < lineCounter) // checking if number of clusters is same
+        if (count <= lineCounter) // checking if number of clusters is same
         {
             break;
         }
-
         lineCounter++;
+
     }
 
     fclose(fp);
