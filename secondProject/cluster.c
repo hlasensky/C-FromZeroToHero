@@ -446,7 +446,6 @@ int load_clusters(char *filename, struct cluster_t **arr, int *errorInLoad)
                     if (i == 1) // checking if its second part containing number
                     {
                         count = atoi(countPointer);
-                        *arr = malloc(count * sizeof(struct cluster_t)); // allocating memory for number if clusters
                         if (count <= 0)
                         {
                             fprintf(stderr, "Please enter valid count data!");
@@ -454,6 +453,7 @@ int load_clusters(char *filename, struct cluster_t **arr, int *errorInLoad)
 
                             goto end;
                         }
+                        *arr = malloc(count * sizeof(struct cluster_t)); // allocating memory for number if clusters
                     }
                     countPointer = strtok(NULL, "=");
                     i++;
