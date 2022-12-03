@@ -324,7 +324,7 @@ int checkIDs(struct cluster_t *arr, int id)
  kam se odkazuje parametr 'arr'. Funkce vraci pocet nactenych objektu (shluku).
  V pripade nejake chyby uklada do pameti, kam se odkazuje 'arr', hodnotu NULL.
 */
-int load_clusters(char *filename, struct cluster_t **arr)
+int load_clusters(char *filename, struct cluster_t **arr, int *errorInLoad)
 {
     assert(arr != NULL);
     FILE *fp;
@@ -336,15 +336,14 @@ int load_clusters(char *filename, struct cluster_t **arr)
     size_t len = 0;
     int count = 1;
     int read;
-    int id;
-    int x;
-    int y;
+    int id, x, y;
 
     fp = fopen(filename, "r");
     if (fp == NULL)
     {
         fprintf(stderr, "Please enter valid file name!");
-        exit(EXIT_FAILURE);
+        *errorInLoad = 1;
+        goto end;
     }
 
     while ((read = getline(&line, &len, fp)) != EOF) // parsig file on lines
@@ -360,7 +359,9 @@ int load_clusters(char *filename, struct cluster_t **arr)
                 if (*parsed == '\n') // check if id, x and y is present
                 {
                     fprintf(stderr, "Please enter valid data!");
-                    exit(EXIT_FAILURE);
+                    *errorInLoad = 1;
+
+                    goto end;
                 }
                 switch (parsedItemCount) // checking what part of line is saved in parsed 0 => id, 1 => x, 2 => y
                 {
@@ -369,7 +370,9 @@ int load_clusters(char *filename, struct cluster_t **arr)
                     if ((id == 0 && parsed[0] != '0') || (strstr(parsed, ".") != NULL && parsed != NULL))
                     {
                         fprintf(stderr, "Please enter valid id!");
-                        exit(EXIT_FAILURE);
+                        *errorInLoad = 1;
+
+                        goto end;
                     }
                     if (lineCounter > 1) // check if id, x and y is present
                     {
@@ -377,7 +380,9 @@ int load_clusters(char *filename, struct cluster_t **arr)
                         if (er)
                         {
                             fprintf(stderr, "Please enter valid ids!");
-                            exit(EXIT_FAILURE);
+                            *errorInLoad = 1;
+
+                            goto end;
                         }
                     }
                     temporaryObj.id = id;
@@ -387,12 +392,16 @@ int load_clusters(char *filename, struct cluster_t **arr)
                     if ((x == 0 && parsed[0] != '0') || (strstr(parsed, ".") != NULL && parsed != NULL))
                     {
                         fprintf(stderr, "Please enter valid x cordinate!");
-                        exit(EXIT_FAILURE);
+                        *errorInLoad = 1;
+
+                        goto end;
                     }
                     else if (x < 0 || x > 1000)
                     {
                         fprintf(stderr, "Please enter valid x cordinate in range!");
-                        exit(EXIT_FAILURE);
+                        *errorInLoad = 1;
+
+                        goto end;
                     }
                     temporaryObj.x = x;
                     break;
@@ -401,12 +410,16 @@ int load_clusters(char *filename, struct cluster_t **arr)
                     if ((y == 0 && parsed[0] != '0') || (strstr(parsed, ".") != NULL && parsed != NULL))
                     {
                         fprintf(stderr, "Please enter valid y cordinate!");
-                        exit(EXIT_FAILURE);
+                        *errorInLoad = 1;
+
+                        goto end;
                     }
                     else if (y < 0 || y > 1000)
                     {
                         fprintf(stderr, "Please enter valid y cordinate in range!");
-                        exit(EXIT_FAILURE);
+                        *errorInLoad = 1;
+
+                        goto end;
                     }
                     temporaryObj.y = y;
 
@@ -422,7 +435,9 @@ int load_clusters(char *filename, struct cluster_t **arr)
                 if (parsed[5] != '=') // checking if data are correct
                 {
                     fprintf(stderr, "Please enter valid data!");
-                    exit(EXIT_FAILURE);
+                    *errorInLoad = 1;
+
+                    goto end;
                 }
                 int i = 0;
                 countPointer = strtok(parsed, "="); // parsing line by =
@@ -434,7 +449,9 @@ int load_clusters(char *filename, struct cluster_t **arr)
                         if (count <= 0)
                         {
                             fprintf(stderr, "Please enter valid count data!");
-                            exit(EXIT_FAILURE);
+                            *errorInLoad = 1;
+
+                            goto end;
                         }
                         *arr = malloc(count * sizeof(struct cluster_t)); // allocating memory for number if clusters
                     }
@@ -450,16 +467,17 @@ int load_clusters(char *filename, struct cluster_t **arr)
         if (parsedItemCount != 3 && lineCounter != 0) // another check for if data are fully present
         {
             fprintf(stderr, "Enter valid format for dataa!");
-            exit(EXIT_FAILURE);
+            *errorInLoad = 1;
+
+            break;
         }
         if (count <= lineCounter) // checking if number of clusters is same
         {
             break;
         }
         lineCounter++;
-
     }
-
+end:
     fclose(fp);
     if (line)
         free(line);
@@ -467,7 +485,7 @@ int load_clusters(char *filename, struct cluster_t **arr)
     if (count > lineCounter) // checking if number of clusters is same
     {
         fprintf(stderr, "Enter valid format for dataa!");
-        exit(EXIT_FAILURE);
+        *errorInLoad = 1;
     }
 
     return count;
@@ -495,6 +513,7 @@ int main(int argc, char *argv[])
     int numberOfFinallClusters = 1;
     int indexC1, indexC2;
     int numberOfClusters;
+    int errorInLoad = 0;
 
     if (!fileName)
     {
@@ -521,8 +540,12 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    numberOfClusters = load_clusters(fileName, &clusters);
+    numberOfClusters = load_clusters(fileName, &clusters, &errorInLoad);
 
+    if (errorInLoad)
+    {
+        goto cleanUp;
+    }
     if (numberOfClusters < numberOfFinallClusters)
     {
         fprintf(stderr, "Too many finall clusters!");
@@ -543,6 +566,7 @@ int main(int argc, char *argv[])
         print_clusters(clusters, numberOfClusters);
     }
 
+cleanUp:
     for (int i = 0; i < numberOfClusters; i++) // freeing allocated memory in clusters
     {
         clear_cluster(&clusters[i]);
